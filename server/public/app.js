@@ -3,13 +3,13 @@ var data;
 var choices;
 var choiceMap = ["A", "B", "C", "D"];
 
-function eventLoop() {
+(function eventLoop() {
 	getQuestion(function(data) {
 		this.data = data;
 		displayQuestionLoop();
 		selectAnswerLoop();
 	});
-}
+})();
 
 function getQuestion(callback) {
 	ajax({ url: url }, function(data) {
@@ -111,4 +111,8 @@ function formatChoices() {
 		output += choiceMap[i] + '. ' + choice + '\n';
 	}
 	return output;
+}
+
+function postAnswer() {
+	getQuestion();
 }
