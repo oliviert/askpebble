@@ -15,25 +15,16 @@
 @property (nonatomic, weak) IBOutlet UILabel *questionLabel;
 
 @property (nonatomic, strong) NSArray *answerChoices;
+@property (nonatomic, strong) NSArray *responseCounts;
 
 @property (nonatomic, strong) NSMutableArray *barWidthConstraints;
-
 @property (nonatomic, assign) BOOL barWidthConstraintsNeedUpdate;
-
-@property (nonatomic, strong) NSArray *responseCounts;
 
 @end
 
 @implementation ASKQuestionResultsViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+#pragma mark - View Life Cycle
 
 - (void)viewDidLoad
 {
@@ -103,6 +94,8 @@
         previousBar = bar;
     }
 }
+
+#pragma mark - Update Constraints
 
 - (void)updateBarWidthConstraints
 {
