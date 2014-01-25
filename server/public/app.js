@@ -58,7 +58,7 @@ function nextChoice() {
 		selectedChoice = 0;
 	}
 	else {
-		++selectedChoice;
+		selectedChoice++;
 	}
 	renderChoices();
 }
@@ -84,7 +84,7 @@ function formatChoices() {
 		if(selectedChoice === i) {
 			output += '>';
 		}
-		output += choiceMap[i] + '. ' + choice + '\n';
+		output += choiceMap[i] + '. ' + i + '\n';
 	}
 	return output;
 }
