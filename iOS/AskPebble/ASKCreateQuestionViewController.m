@@ -9,6 +9,7 @@
 #import "ASKCreateQuestionViewController.h"
 #import "ASKTextFieldCell.h"
 #import "ASKQuestionResultsViewController.h"
+#import "UITableView+IndexPathFromView.h"
 
 #define kMaxChoicesCount 4
 
@@ -167,8 +168,8 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    CGPoint correctedPoint = [self.activeTextField convertPoint:[self.activeTextField bounds].origin toView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:correctedPoint];
+    NSIndexPath *indexPath = [self.tableView indexPathForCellWithSubview:textField];
+    
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
     self.activeTextField = textField;
@@ -185,8 +186,7 @@
 {
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    CGPoint correctedPoint = [textField convertPoint:[textField bounds].origin toView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:correctedPoint];
+    NSIndexPath *indexPath = [self.tableView indexPathForCellWithSubview:textField];
     
     if (indexPath.section == 0) {
         self.question = newString;
