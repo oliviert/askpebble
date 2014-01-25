@@ -19,6 +19,11 @@
 		7A1343F21893B8650009A5F4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A1343DA1893B8650009A5F4 /* UIKit.framework */; };
 		7A1343FA1893B8650009A5F4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7A1343F81893B8650009A5F4 /* InfoPlist.strings */; };
 		7A1343FC1893B8650009A5F4 /* AskPebbleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1343FB1893B8650009A5F4 /* AskPebbleTests.m */; };
+		7A1344781893B9ED0009A5F4 /* ASKModePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1344771893B9ED0009A5F4 /* ASKModePickerViewController.m */; };
+		7A13447A1893BA0B0009A5F4 /* ASKStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A1344791893BA0B0009A5F4 /* ASKStoryboard.storyboard */; };
+		7A13447D1893BFB80009A5F4 /* ASKCreateQuestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A13447C1893BFB80009A5F4 /* ASKCreateQuestionViewController.m */; };
+		7A1345351893CA0B0009A5F4 /* ASKTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1345341893CA0B0009A5F4 /* ASKTextFieldCell.m */; };
+		7A1345381893DAC50009A5F4 /* ASKQuestionResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1345371893DAC50009A5F4 /* ASKQuestionResultsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +53,15 @@
 		7A1343F71893B8650009A5F4 /* AskPebbleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AskPebbleTests-Info.plist"; sourceTree = "<group>"; };
 		7A1343F91893B8650009A5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7A1343FB1893B8650009A5F4 /* AskPebbleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AskPebbleTests.m; sourceTree = "<group>"; };
+		7A1344761893B9ED0009A5F4 /* ASKModePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKModePickerViewController.h; sourceTree = "<group>"; };
+		7A1344771893B9ED0009A5F4 /* ASKModePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKModePickerViewController.m; sourceTree = "<group>"; };
+		7A1344791893BA0B0009A5F4 /* ASKStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ASKStoryboard.storyboard; sourceTree = "<group>"; };
+		7A13447B1893BFB80009A5F4 /* ASKCreateQuestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKCreateQuestionViewController.h; sourceTree = "<group>"; };
+		7A13447C1893BFB80009A5F4 /* ASKCreateQuestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKCreateQuestionViewController.m; sourceTree = "<group>"; };
+		7A1345331893CA0B0009A5F4 /* ASKTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKTextFieldCell.h; sourceTree = "<group>"; };
+		7A1345341893CA0B0009A5F4 /* ASKTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKTextFieldCell.m; sourceTree = "<group>"; };
+		7A1345361893DAC50009A5F4 /* ASKQuestionResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKQuestionResultsViewController.h; sourceTree = "<group>"; };
+		7A1345371893DAC50009A5F4 /* ASKQuestionResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKQuestionResultsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +123,15 @@
 			children = (
 				7A1343E51893B8650009A5F4 /* ASKAppDelegate.h */,
 				7A1343E61893B8650009A5F4 /* ASKAppDelegate.m */,
+				7A1344791893BA0B0009A5F4 /* ASKStoryboard.storyboard */,
+				7A1344761893B9ED0009A5F4 /* ASKModePickerViewController.h */,
+				7A1344771893B9ED0009A5F4 /* ASKModePickerViewController.m */,
+				7A13447B1893BFB80009A5F4 /* ASKCreateQuestionViewController.h */,
+				7A13447C1893BFB80009A5F4 /* ASKCreateQuestionViewController.m */,
+				7A1345361893DAC50009A5F4 /* ASKQuestionResultsViewController.h */,
+				7A1345371893DAC50009A5F4 /* ASKQuestionResultsViewController.m */,
+				7A1345331893CA0B0009A5F4 /* ASKTextFieldCell.h */,
+				7A1345341893CA0B0009A5F4 /* ASKTextFieldCell.m */,
 				7A1343E81893B8650009A5F4 /* Images.xcassets */,
 				7A1343DD1893B8650009A5F4 /* Supporting Files */,
 			);
@@ -220,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A13447A1893BA0B0009A5F4 /* ASKStoryboard.storyboard in Resources */,
 				7A1343E11893B8650009A5F4 /* InfoPlist.strings in Resources */,
 				7A1343E91893B8650009A5F4 /* Images.xcassets in Resources */,
 			);
@@ -240,7 +264,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A1344781893B9ED0009A5F4 /* ASKModePickerViewController.m in Sources */,
 				7A1343E71893B8650009A5F4 /* ASKAppDelegate.m in Sources */,
+				7A1345351893CA0B0009A5F4 /* ASKTextFieldCell.m in Sources */,
+				7A1345381893DAC50009A5F4 /* ASKQuestionResultsViewController.m in Sources */,
+				7A13447D1893BFB80009A5F4 /* ASKCreateQuestionViewController.m in Sources */,
 				7A1343E31893B8650009A5F4 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -442,6 +470,7 @@
 				7A1344011893B8650009A5F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7A1344021893B8650009A5F4 /* Build configuration list for PBXNativeTarget "AskPebbleTests" */ = {
 			isa = XCConfigurationList;
@@ -450,6 +479,7 @@
 				7A1344041893B8650009A5F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
