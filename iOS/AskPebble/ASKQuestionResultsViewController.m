@@ -14,7 +14,6 @@
 
 @property (nonatomic, weak) IBOutlet UILabel *questionLabel;
 
-@property (nonatomic, strong) NSArray *answerChoices;
 @property (nonatomic, strong) NSArray *responseCounts;
 
 @property (nonatomic, strong) NSMutableArray *barWidthConstraints;
@@ -28,18 +27,25 @@
 
 @implementation ASKQuestionResultsViewController
 
+#pragma mark - Setting Answer Choices
+
+- (void)setAnswerChoices:(NSArray *)answerChoices
+{
+    answerChoices = [answerChoices arrayByAddingObject:NSLocalizedString(@"Skip", @"")];
+    _answerChoices = [answerChoices copy];
+}
+
 #pragma mark - View Life Cycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.answerChoices = @[@"Pizza", @"Hotdog", @"Lasagna", @"Pasta"];
     self.responseCounts = @[@15, @20, @30, @40];
     
     NSInteger highestResponseCount = 40;
     CGFloat maxBarWidth = self.view.frame.size.width - (kSystemDefaultLeftAndRightPadding * 2);
-    CGFloat barHeight = 50;
+    CGFloat barHeight = 30;
     
     UIView *previousBar = nil;
     
@@ -97,6 +103,8 @@
         
         previousBar = bar;
     }
+    
+    self.questionLabel.text = self.question;
 }
 
 #pragma mark - Actions

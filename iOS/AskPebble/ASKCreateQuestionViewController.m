@@ -109,6 +109,9 @@
     UINavigationController *resultsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ASKQuestionResultsNavigationController"];
     ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
     
+    resultsViewController.question = self.question;
+    resultsViewController.answerChoices = self.answerChoices;
+    
     __weak ASKCreateQuestionViewController *weakSelf = self;
     resultsViewController.completionHandler = ^{
         [weakSelf resetUI];

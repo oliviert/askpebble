@@ -10,6 +10,9 @@
 
 @interface ASKQuestionResultsViewController : UIViewController
 
+@property (nonatomic, copy) NSString *question;
+@property (nonatomic, copy) NSArray *answerChoices;
+
 @property (nonatomic, copy) void (^completionHandler)(); //required
 
 @end
