@@ -26,7 +26,11 @@ app.post('/ask', function(req, res) {
 });
 
 app.get('/questions', function(req, res) {
-  
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  Question.find({ created_on: {$gte: today }}, function(err, questions) {
+    res.send(questions);
+  });
 });
 
 app.listen(app.get('port'), function() {
