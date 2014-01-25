@@ -47,6 +47,10 @@ function getNextQuestion() {
 
 function updateChoices(c) {
 	choices = c;
+	choices.push({
+		_id: '0',
+		choice: 'Skip'
+	});
 }
 
 function nextChoice() {
@@ -77,7 +81,7 @@ function formatChoices() {
 	var output = '';
 	for(var i=0; i < choices.length; i++) {
 		if(selectedChoice === i) {
-			output += '>'
+			output += '>';
 		}
 		output += choiceMap[i] + '. ' + choices[i] + '\n';
 	}
