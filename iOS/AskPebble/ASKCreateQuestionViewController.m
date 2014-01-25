@@ -8,6 +8,7 @@
 
 #import "ASKCreateQuestionViewController.h"
 #import "ASKTextFieldCell.h"
+#import "ASKQuestionResultsViewController.h"
 
 #define kMaxChoicesCount 4
 
@@ -50,7 +51,9 @@
 
 - (IBAction)createQuestionButtonWasTapped
 {
-    NSLog(@"DONE!");
+    ASKQuestionResultsViewController *resultsViewController = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([ASKQuestionResultsViewController class])];
+    
+    [self.navigationController pushViewController:resultsViewController animated:YES];
 }
 
 #pragma mark - UITableView
