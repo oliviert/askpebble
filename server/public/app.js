@@ -2,6 +2,7 @@ var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/quest
 var choices = [];
 var selectedChoice = 0;
 var choiceMap = ["A", "B", "C", "D"];
+var qid;
 
 simply.on('singleClick', function(e) {
 	if(e.button === 'up') {
@@ -17,9 +18,25 @@ simply.on('singleClick', function(e) {
 
 getNextQuestion();
 
+function postAnswer(){
+	ajax({
+		method:'post', 
+		url: '/', 
+		data: { 
+			pebbleId : Pebble.getAccountToken(), 
+			questionId : qid, 
+			answerId : choices[selectedChoice]._id
+		}
+	}, function(data){
+		getNextQuestion();
+	});
+};
+
 function getNextQuestion() {
 	ajax({ url: url }, function(data) {
+		qid = data._id;
 		selectedChoice = 0;
+		updateChoices(data.choices);
 		simply.text({
 			subtitle: data.question,
 			body: formatChoices(data.choices)
@@ -27,10 +44,11 @@ function getNextQuestion() {
 	});
 }
 
-function formatChoices(choices) {
-	for(var i = 0; i < choices.length; i++) {
-		this.choices[i] = choices[i];
-	}
+function updateChoices(c) {
+	choices = c;
+	choices.append({
+		_id: '0',
+	});
 }
 
 function nextChoice() {
@@ -59,10 +77,12 @@ function renderChoices() {
 
 function formatChoices() {
 	var output = '';
-	for(int i=0; i < choices.length; i++) {
+	for(var i=0; i < choices.length; i++) {
 		if(selectedChoice === i) {
 			output += '>'
 		}
 		output += choiceMap[i] + '. ' + choices[i] + '\n';
 	}
+	output += choiceMap[choices.length] + '. Skip';
+	return output;
 }
