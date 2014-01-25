@@ -1,6 +1,4 @@
 var uuid = Pebble.getAccountToken();
-//var domain = 'http://askpebble.herokuapp.com';
-//var get_url = [domain, 'questions', uuid].join('/');
 var get_url = 'http://askpebble.herokuapp.com/questions/12345';
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
@@ -144,7 +142,7 @@ function postAnswer() {
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
-		nextQuestion();
+		simply.body('posted');
 	});
 }
 
