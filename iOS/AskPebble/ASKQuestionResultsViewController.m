@@ -95,7 +95,21 @@
     }
 }
 
-#pragma mark - Update Constraints
+#pragma mark - Updating Bar Widths
+
+- (void)updateBarWidthsAnimated:(BOOL)animated
+{
+    [self updateBarWidthConstraints];
+    
+    if (animated) {
+        [UIView animateWithDuration:0.1 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+    else {
+        [self.view layoutIfNeeded];
+    }
+}
 
 - (void)updateBarWidthConstraints
 {
