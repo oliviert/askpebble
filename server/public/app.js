@@ -4,19 +4,30 @@ var selectedChoice = 0;
 var choiceMap = ["A", "B", "C", "D"];
 var qid;
 
-simply.on('singleClick', function(e) {
-	if(e.button === 'up') {
-		prevChoice();
-	}
-	else if(e.button === 'down') {
-		nextChoice();
-	}
-	else if(e.button === 'select') {
-		postAnswer();
-	}
-});
-
 getNextQuestion();
+
+function enableChoiceSelect() {
+	simply.on('singleClick', function(e) {
+		if(e.button === 'up') {
+			prevChoice();
+		}
+		else if(e.button === 'down') {
+			nextChoice();
+		}
+		else if(e.button === 'select') {
+			postAnswer();
+		}
+		else if(e.button === 'back') {
+			disableChoiceSelect();
+		}
+	});	
+	simply.setScrollable(false);
+}
+
+function disableChoiceSelect() {
+	simply.off('singleClick');
+	simply.setScrollable(true);
+}
 
 function postAnswer(){
 	ajax({
@@ -38,6 +49,7 @@ function getNextQuestion() {
 		qid = data._id;
 		selectedChoice = 0;
 		updateChoices(data.choices);
+		disableChoiceSelect();
 		simply.text({
 			subtitle: data.question,
 			body: formatChoices(data.choices)
