@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var Question = mongoose.model('Question', {
-	date: Date,
+	created_on: Date,
 	question: String,
 	choices: [{
 		id: String,
