@@ -2,7 +2,7 @@ var uuid = Pebble.getAccountToken();
 //var domain = 'http://askpebble.herokuapp.com';
 //var get_url = [domain, 'questions', uuid].join('/');
 var get_url = 'http://askpebble.herokuapp.com/questions/' + uuid;
-var post_url = [domain, 'answer'].join('/');
+var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
