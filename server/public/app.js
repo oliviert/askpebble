@@ -20,6 +20,7 @@ getNextQuestion();
 function getNextQuestion() {
 	ajax({ url: url }, function(data) {
 		selectedChoice = 0;
+		initChoices(data.choices);
 		simply.text({
 			subtitle: data.question,
 			body: formatChoices(data.choices)
@@ -27,8 +28,14 @@ function getNextQuestion() {
 	});
 }
 
-function formatChoices(choices) {
-	for(var i = 0; i < choices.length; i++) {
+function initChoices(c) {
+	choices = [];
+
+	for(var i in c) {
+		choices[i] = c[i];
+	}
+
+	for(var i = 0; i < ; i++) {
 		this.choices[i] = choices[i];
 	}
 }
