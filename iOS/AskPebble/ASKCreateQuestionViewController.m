@@ -10,6 +10,7 @@
 #import "ASKTextFieldCell.h"
 #import "ASKQuestionResultsViewController.h"
 #import "UITableView+IndexPathFromView.h"
+#import "ASKClient.h"
 
 #define kMaxChoicesCount 4
 
@@ -89,6 +90,22 @@
 
 - (IBAction)createQuestionButtonWasTapped
 {
+    NSMutableArray *answerChoices = [NSMutableArray array];
+    for (NSString *answerChoice in self.answerChoices) {
+        if ([answerChoice length] > 0) {
+            [answerChoices addObject:answerChoice];
+        }
+    }
+    
+    [[ASKClient sharedClient] askQuestion:self.question withAnswerChoices:answerChoices completionHandler:^(BOOL success, NSError *error) {
+        if (success) {
+            NSLog(@"Success!");
+        }
+        else {
+            NSLog(@"Error:%@", [error userInfo]);
+        }
+    }];
+    
     UINavigationController *resultsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ASKQuestionResultsNavigationController"];
     ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
     
