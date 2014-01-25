@@ -19,7 +19,7 @@ function displayQuestionLoop() {
 }
 
 function displayQuestionEvents() {
-	simply.off('singleClick');
+	clearListeners();
 	simply.on('singleClick', function(e) {
 		if(e.button === 'select') {
 			selectAnswerLoop();
@@ -40,7 +40,7 @@ function selectAnswerLoop() {
 }
 
 function selectAnswerEvents() {
-	simply.off('singleClick');
+	clearListeners();
 	simply.on('singleClick', function(e) {
 		if(e.button === 'up') {
 			prevChoice();
@@ -51,10 +51,12 @@ function selectAnswerEvents() {
 		else if(e.button === 'select') {
 			postAnswer();
 		}
-		else if(e.button === 'back') {
+	});	
+	simply.on('longClick', function(e) {
+		if(e.button === 'select') {
 			displayQuestionLoop();
 		}
-	});	
+	})
 	simply.scrollable(false);	
 }
 
@@ -106,6 +108,11 @@ function formatChoices() {
 		output += choiceMap[i] + '. ' + choice + '\n';
 	}
 	return output;
+}
+
+function clearListeners() {
+	simply.off('singleClick');
+	simply.off('longClick');
 }
 
 function postAnswer() {
