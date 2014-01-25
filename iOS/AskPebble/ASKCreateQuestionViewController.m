@@ -116,6 +116,8 @@
         
         if (textFieldCell == nil) {
             textFieldCell = [[ASKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+            
+            textFieldCell.textField.clearButtonMode = UITextFieldViewModeAlways;
         }
         
         textFieldCell.textField.delegate = self;
