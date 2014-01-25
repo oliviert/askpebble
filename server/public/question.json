@@ -1,5 +1,5 @@
 {
-	"question" : "this is a really long question",
+	"question" : "this is a really long question. really really really really really long. this is going to need some scrolling. the quick red fox jumped over the lazy yellow dog.",
 	"choices" : [
 		{"choice":"five"},
 		{"choice":"apple"},
