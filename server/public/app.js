@@ -1,46 +1,60 @@
-var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/question.json';
+var uuid = Pebble.getAccountToken();
+var get_url = 'http://askpebble.herokuapp.com/questions/54321';
+var post_url = 'http://askpebble.herokuapp.com/answer';
+
+var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
-getQuestion(function(response) {
-	clearFields();
-	displayQuestionLoop();
+getQuestions(function(response) {
+	nextQuestion();
 });
 
-function getQuestion(callback) {
-	ajax({ url: url }, function(response) {
-		data = JSON.parse(response);
+function getQuestions(callback) {
+	ajax({ url: get_url }, function(response) {
+		questionBuffer = JSON.parse(response);
 		callback(response);
 	});
 }
 
-function displayQuestionLoop() {
-	displayQuestionEvents();
-	displayQuestionRender(data);
+function nextQuestion(callback) {
+	if(questionBuffer.length === 0) {
+		//no questions
+	}
+	else {
+		data = questionBuffer.shift();
+		clearFields();
+		questionLoop();
+	}
 }
 
-function displayQuestionEvents() {
+function questionLoop() {
+	registerQuestionLoopEvents();
+	renderQuestion(data);
+}
+
+function registerQuestionLoopEvents() {
 	clearListeners();
 	simply.on('singleClick', function(e) {
 		if(e.button === 'select') {
-			selectAnswerLoop();
+			answerLoop();
 		}
 	});
 	simply.scrollable(true);
 }
 
-function displayQuestionRender() {
+function renderQuestion() {
 	simply.text({
 		body: data.question
 	}, true);
 }
 
-function selectAnswerLoop() {
-	selectAnswerEvents();
-	selectAnswerRender();
+function answerLoop() {
+	registerAnswerLoopEvents();
+	renderAnswers();
 }
 
-function selectAnswerEvents() {
+function registerAnswerLoopEvents() {
 	clearListeners();
 	simply.on('singleClick', function(e) {
 		if(e.button === 'up') {
@@ -55,13 +69,13 @@ function selectAnswerEvents() {
 	});	
 	simply.on('longClick', function(e) {
 		if(e.button === 'select') {
-			displayQuestionLoop();
+			questionLoop();
 		}
 	})
 	simply.scrollable(false);	
 }
 
-function selectAnswerRender() {
+function renderAnswers() {
 	if(!choices) {
 		selectedChoice = 0;
 		updateChoices(data.choices);
@@ -119,7 +133,17 @@ function clearListeners() {
 }
 
 function postAnswer() {
-	getQuestion();
+	ajax({
+		method: 'post',
+		url: post_url,
+		data: {
+			uuid: '54321',
+			qid: data._id,
+			aid: choices[selectedChoice]._id,
+		}
+	}, function() {
+		simply.body('posted');
+	});
 }
 
 function clearFields() {
