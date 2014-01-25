@@ -1,4 +1,8 @@
-var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/question.json';
+var uuid = Pebble.getAccountToken();
+var domain = 'http://askpebble.herokuapp.com/';
+var get_url = new File(domain, 'questions', uuid).toString();
+var post_url = new File(domain, '/answer').toString();
+
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
@@ -8,7 +12,7 @@ getQuestion(function(response) {
 });
 
 function getQuestion(callback) {
-	ajax({ url: url }, function(response) {
+	ajax({ url: get_url }, function(response) {
 		data = JSON.parse(response);
 		callback(response);
 	});
@@ -119,7 +123,18 @@ function clearListeners() {
 }
 
 function postAnswer() {
-	getQuestion();
+	ajax({
+		method: 'post',
+		url: post_url,
+		data: {
+			uuid: uuid,
+			qid: data._id,
+			aid: choices[selectedChoice].choice,
+		},
+		function() {
+			getQuestion();
+		}
+	});
 }
 
 function clearFields() {
