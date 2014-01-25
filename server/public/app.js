@@ -15,6 +15,8 @@ simply.on('singleClick', function(e) {
 	}
 });
 
+getNextQuestion();
+
 function getNextQuestion() {
 	ajax({ url: url }, function(data) {
 		selectedChoice = 0;
