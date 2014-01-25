@@ -2,12 +2,9 @@ var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/quest
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
-(function eventLoop() {
-	getQuestion(function(response) {
-		displayQuestionLoop();
-		selectAnswerLoop();
-	});
-})();
+getQuestion(function(response) {
+	displayQuestionLoop();
+});
 
 function getQuestion(callback) {
 	ajax({ url: url }, function(response) {
