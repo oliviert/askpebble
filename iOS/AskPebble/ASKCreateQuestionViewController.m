@@ -142,6 +142,8 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
         [tableView endUpdates];
+        
+        self.createQuestionButton.enabled = [self isValidQuestion];
     }
 }
 
