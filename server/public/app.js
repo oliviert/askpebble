@@ -137,7 +137,7 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: uuid,
+			uuid: '12345',
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
