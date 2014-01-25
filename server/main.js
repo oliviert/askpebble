@@ -21,7 +21,7 @@ app.use(express.bodyParser());
 app.use(express.static(process.cwd() + '/public'));
 
 app.post('/ask', function(req, res) {
-  var question = new Question({ question: req.body.question });
+  var question = new Question({ question: req.body.question, choices: req.body.choices });
   question.save();
 });
 
