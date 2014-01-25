@@ -1,5 +1,5 @@
 var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/12345';
+var get_url = 'http://askpebble.herokuapp.com/questions/54321';
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
@@ -137,7 +137,7 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: '12345',
+			uuid: '54321',
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
