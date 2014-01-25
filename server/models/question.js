@@ -4,7 +4,7 @@ var Question = mongoose.model('Question', {
 	date: Date,
 	question: String,
 	choices: [{
-		id: String
+		id: String,
 		choice: String
 	}]
 });
