@@ -1,6 +1,5 @@
 var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/question.json';
-var data;
-var choices;
+var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
 (function eventLoop() {
@@ -64,7 +63,7 @@ function selectAnswerEvents() {
 }
 
 function selectAnswerRender() {
-	var selectedAnswer = 0;
+	selectedChoice = 0;
 	updateChoices(data.choices);
 	renderChoices();
 }
