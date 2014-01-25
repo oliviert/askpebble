@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 
 var userSchema = mongoose.Schema({
   uuid: String,
-  answers: { type: Array, default: [] },
   created_on: Date
 });
 
