@@ -20,6 +20,7 @@
 @property (nonatomic, weak) UITextField *activeTextField;
 
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *createQuestionButton;
 
 - (IBAction)createQuestionButtonWasTapped;
 
@@ -45,6 +46,23 @@
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, 0, 0);
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
+#pragma mark - Data Validation
+
+- (BOOL)isValidQuestion
+{
+    if ([self.question length] == 0) {
+        return NO;
+    }
+    
+    for (NSString *answerChoice in self.answerChoices) {
+        if ([answerChoice length] == 0) {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 #pragma mark - Actions
@@ -156,6 +174,8 @@
     else {
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
     }
+    
+    self.createQuestionButton.enabled = [self isValidQuestion];
     
     return YES;
 }
