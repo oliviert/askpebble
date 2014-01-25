@@ -130,10 +130,9 @@ function postAnswer() {
 			uuid: uuid,
 			qid: data._id,
 			aid: choices[selectedChoice].choice,
-		},
-		function() {
-			getQuestion();
 		}
+	}, function() {
+		getQuestion();
 	});
 }
 
