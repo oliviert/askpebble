@@ -46,6 +46,9 @@ function getNextQuestion() {
 
 function updateChoices(c) {
 	choices = c;
+	choices.append({
+		_id: '0',
+	});
 }
 
 function nextChoice() {
@@ -74,10 +77,12 @@ function renderChoices() {
 
 function formatChoices() {
 	var output = '';
-	for(int i=0; i < choices.length; i++) {
+	for(var i=0; i < choices.length; i++) {
 		if(selectedChoice === i) {
 			output += '>'
 		}
 		output += choiceMap[i] + '. ' + choices[i] + '\n';
 	}
+	output += choiceMap[choices.length] + '. Skip';
+	return output;
 }
