@@ -54,7 +54,7 @@ function updateChoices(c) {
 }
 
 function nextChoice() {
-	if(selectedChoice > choices.length - 1) {
+	if(selectedChoice === choices.length - 1) {
 		selectedChoice = 0;
 	}
 	else {
@@ -64,7 +64,7 @@ function nextChoice() {
 }
 
 function prevChoice() {
-	if(selectedChoice < 0) {
+	if(selectedChoice === 0) {
 		selectedChoice = choices.length -1
 	}
 	else {
@@ -84,8 +84,7 @@ function formatChoices() {
 		if(selectedChoice === i) {
 			output += '>';
 		}
-		output += i;
-		//output += choiceMap[i] + '. ' + choice + '\n';
+		output += choiceMap[i] + '. ' + choice + '\n';
 	}
 	return output;
 }
