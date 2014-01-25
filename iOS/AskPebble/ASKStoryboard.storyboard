@@ -88,7 +88,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Create Question" id="Q99-Nf-fkF">
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Create" id="a5e-AX-5O4">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Ask" id="a5e-AX-5O4">
                             <connections>
                                 <action selector="createQuestionButtonWasTapped" destination="M3J-y5-U76" id="wX0-P9-IC7"/>
                             </connections>
