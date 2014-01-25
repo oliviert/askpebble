@@ -11,9 +11,9 @@ var choiceMap = ["A", "B", "C", "D"];
 })();
 
 function getQuestion(callback) {
-	ajax({ url: url }, function(data) {
-		var data = JSON.parse(data);
-		callback(data);
+	ajax({ url: url }, function(response) {
+		var data = JSON.parse(response);
+		callback(response);
 	});
 }
 
