@@ -13,6 +13,7 @@
 #import "ASKClient.h"
 
 #define kMaxChoicesCount 4
+#define kAnswerChoiceMaxLength 20
 
 @interface ASKCreateQuestionViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
@@ -67,6 +68,12 @@
         NSString *answerChoice = self.answerChoices[i];
         
         if ([answerChoice length] == 0) {
+            return NO;
+        }
+    }
+    
+    for (NSString *answerChoice in self.answerChoices) {
+        if ([answerChoice length] > kAnswerChoiceMaxLength) {
             return NO;
         }
     }
@@ -232,6 +239,10 @@
         self.question = newString;
     }
     else {
+        if ([newString length] > kAnswerChoiceMaxLength) {
+            return NO;
+        }
+        
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
     }
     
