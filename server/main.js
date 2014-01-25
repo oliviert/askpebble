@@ -2,6 +2,7 @@
 
 var express = require('express');
 var app = express();
+var Question = require('./models/question');
 
 app.set('port', process.env.PORT || 3000);
 
