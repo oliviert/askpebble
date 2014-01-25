@@ -60,7 +60,10 @@
         return NO;
     }
     
-    for (NSString *answerChoice in self.answerChoices) {
+    //only need 2 choices
+    for (NSInteger i = 0; i < 2; i++) {
+        NSString *answerChoice = self.answerChoices[i];
+        
         if ([answerChoice length] == 0) {
             return NO;
         }
