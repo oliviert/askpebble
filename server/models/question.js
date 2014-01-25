@@ -3,14 +3,16 @@ var mongoose = require('mongoose');
 var questionSchema = mongoose.Schema({
   question: String,
   choices: [{
-    choice: String
+    choice: String,
+    count: { type: Number, default: 0 }
   }],
   created_on: Date
 });
 
 questionSchema.pre('save', function(next) {
-  if (!this.created_on)
+  if (!this.created_on) {
     this.created_on = new Date;
+  }
 
   next();
 });
