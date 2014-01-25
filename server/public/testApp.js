@@ -14,7 +14,7 @@ simply.on('singleClick', function(e) {
 });
 
 function postAnswer(){
-	ajax({method:'post', url: 'ENTER URL HERE', data:{pebbleId:'pebbile id number here', questionId:'id for the question', answerId:'selected ans'}}, function(data){
+	ajax({method:'post', url: 'ENTER URL HERE', data:{pebbleId:Pebble.getAccountToken(), questionId:'id for the question', answerId:'selected ans'}}, function(data){
 		getNextQuestion();
 	});
 };
