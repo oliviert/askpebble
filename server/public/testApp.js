@@ -1,4 +1,4 @@
-simply.text({title:'Clickr', body:'The quiz app'}, true);
+simply.text({title:'Clickr', subtitle:'The quiz app'}, true);
 
 simply.on('singleClick', function(e) {
 	if (e.button === 'up') {
