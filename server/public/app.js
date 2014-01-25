@@ -58,7 +58,7 @@ function nextChoice() {
 		selectedChoice = 0;
 	}
 	else {
-		selectedChoice++;
+		++selectedChoice;
 	}
 	renderChoices();
 }
