@@ -2,6 +2,7 @@ var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/quest
 var choices = [];
 var selectedChoice = 0;
 var choiceMap = ["A", "B", "C", "D"];
+var qid;
 
 simply.on('singleClick', function(e) {
 	if(e.button === 'up') {
@@ -18,15 +19,24 @@ simply.on('singleClick', function(e) {
 getNextQuestion();
 
 function postAnswer(){
-	ajax({method:'post', url: 'ENTER URL HERE', data:{pebbleId:Pebble.getAccountToken(), questionId:'id for the question', answerId:'selected ans'}}, function(data){
+	ajax({
+		method:'post', 
+		url: '/', 
+		data: { 
+			pebbleId : Pebble.getAccountToken(), 
+			questionId : qid, 
+			answerId : choices[selectedChoice]._id
+		}
+	}, function(data){
 		getNextQuestion();
 	});
 };
 
 function getNextQuestion() {
 	ajax({ url: url }, function(data) {
+		qid = data._id;
 		selectedChoice = 0;
-		initChoices(data.choices);
+		updateChoices(data.choices);
 		simply.text({
 			subtitle: data.question,
 			body: formatChoices(data.choices)
@@ -34,16 +44,8 @@ function getNextQuestion() {
 	});
 }
 
-function initChoices(c) {
-	choices = [];
-
-	for(var i in c) {
-		choices[i] = c[i];
-	}
-
-	for(var i = 0; i < ; i++) {
-		this.choices[i] = choices[i];
-	}
+function updateChoices(c) {
+	choices = c;
 }
 
 function nextChoice() {
