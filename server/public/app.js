@@ -1,12 +1,50 @@
 var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/question.json';
-var choices = [];
-var selectedChoice = 0;
+var data;
+var choices;
 var choiceMap = ["A", "B", "C", "D"];
-var qid;
 
-getNextQuestion();
+function eventLoop() {
+	getQuestion(function(data) {
+		this.data = data;
+		displayQuestionLoop();
+		selectAnswerLoop();
+	});
+}
 
-function enableChoiceSelect() {
+function getQuestion(callback) {
+	ajax({ url: url }, function(data) {
+		var data = JSON.parse(data);
+		callback(data);
+	});
+}
+
+function displayQuestionLoop() {
+	displayQuestionEvents();
+	displayQuestionRender(data);
+}
+
+function displayQuestionEvents() {
+	simply.off('singleClick');
+	simply.on('singleClick', function(e) {
+		if(e.button === 'select') {
+			selectAnswerLoop();
+		}
+	});
+	simply.scrollable(true);
+}
+
+function displayQuestionRender() {
+	simply.text({
+		body: data.question
+	}, true);
+}
+
+function selectAnswerLoop() {
+	selectAnswerEvents();
+	selectAnswerRender();
+}
+
+function selectAnswerEvents() {
 	simply.off('singleClick');
 	simply.on('singleClick', function(e) {
 		if(e.button === 'up') {
@@ -19,48 +57,16 @@ function enableChoiceSelect() {
 			postAnswer();
 		}
 		else if(e.button === 'back') {
-			disableChoiceSelect();
+			displayQuestionLoop();
 		}
 	});	
-	simply.scrollable(false);
+	simply.scrollable(false);	
 }
 
-function disableChoiceSelect() {
-	simply.off('singleClick');
-	simply.on('singleClick', function(e) {
-		if(e.button === 'select') {
-			enableChoiceSelect();
-		}
-	});
-	simply.scrollable(true);
-}
-
-function postAnswer(){
-	ajax({
-		method:'post', 
-		url: '/', 
-		data: { 
-			pebbleId : Pebble.getAccountToken(), 
-			questionId : qid, 
-			answerId : choices[selectedChoice]._id
-		}
-	}, function(data){
-		getNextQuestion();
-	});
-};
-
-function getNextQuestion() {
-	ajax({ url: url }, function(data) {
-		var data = JSON.parse(data);
-		qid = data._id;
-		selectedChoice = 0;
-		updateChoices(data.choices);
-		disableChoiceSelect();
-		simply.text({
-			subtitle: data.question,
-			body: formatChoices(data.choices)
-		}, true);
-	});
+function selectAnswerRender() {
+	var selectedAnswer = 0;
+	updateChoices(data.choices);
+	renderChoices();
 }
 
 function updateChoices(c) {
