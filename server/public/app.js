@@ -17,6 +17,12 @@ simply.on('singleClick', function(e) {
 
 getNextQuestion();
 
+function postAnswer(){
+	ajax({method:'post', url: 'ENTER URL HERE', data:{pebbleId:Pebble.getAccountToken(), questionId:'id for the question', answerId:'selected ans'}}, function(data){
+		getNextQuestion();
+	});
+};
+
 function getNextQuestion() {
 	ajax({ url: url }, function(data) {
 		selectedChoice = 0;
