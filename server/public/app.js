@@ -37,10 +37,12 @@ function getNextQuestion() {
 		qid = data._id;
 		selectedChoice = 0;
 		updateChoices(data.choices);
-		simply.text({
+		simply.title(typeof choices);
+		simply.subtitle(choices);
+		/*simply.text({
 			subtitle: data.question,
 			body: formatChoices(data.choices)
-		}, true);	
+		}, true);*/	
 	});
 }
 
