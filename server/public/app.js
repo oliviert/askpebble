@@ -1,55 +1,84 @@
 var url = 'https://raw2.github.com/oliviert/askpebble/master/server/public/question.json';
-var choices = [];
-var selectedChoice = 0;
+var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
-var qid;
 
-simply.on('singleClick', function(e) {
-	if(e.button === 'up') {
-		prevChoice();
-	}
-	else if(e.button === 'down') {
-		nextChoice();
-	}
-	else if(e.button === 'select') {
-		postAnswer();
-	}
+getQuestion(function(response) {
+	clearFields();
+	displayQuestionLoop();
 });
 
-getNextQuestion();
-
-function postAnswer(){
-	ajax({
-		method:'post', 
-		url: '/', 
-		data: { 
-			pebbleId : Pebble.getAccountToken(), 
-			questionId : qid, 
-			answerId : choices[selectedChoice]._id
-		}
-	}, function(data){
-		getNextQuestion();
+function getQuestion(callback) {
+	ajax({ url: url }, function(response) {
+		data = JSON.parse(response);
+		callback(response);
 	});
-};
+}
 
-function getNextQuestion() {
-	ajax({ url: url }, function(data) {
-		qid = data._id;
+function displayQuestionLoop() {
+	displayQuestionEvents();
+	displayQuestionRender(data);
+}
+
+function displayQuestionEvents() {
+	clearListeners();
+	simply.on('singleClick', function(e) {
+		if(e.button === 'select') {
+			selectAnswerLoop();
+		}
+	});
+	simply.scrollable(true);
+}
+
+function displayQuestionRender() {
+	simply.text({
+		body: data.question
+	}, true);
+}
+
+function selectAnswerLoop() {
+	selectAnswerEvents();
+	selectAnswerRender();
+}
+
+function selectAnswerEvents() {
+	clearListeners();
+	simply.on('singleClick', function(e) {
+		if(e.button === 'up') {
+			prevChoice();
+		}
+		else if(e.button === 'down') {
+			nextChoice();
+		}
+		else if(e.button === 'select') {
+			postAnswer();
+		}
+	});	
+	simply.on('longClick', function(e) {
+		if(e.button === 'select') {
+			displayQuestionLoop();
+		}
+	})
+	simply.scrollable(false);	
+}
+
+function selectAnswerRender() {
+	if(!choices) {
 		selectedChoice = 0;
 		updateChoices(data.choices);
-		simply.text({
-			subtitle: data.question,
-			body: formatChoices(data.choices)
-		}, true);	
-	});
+	}
+	renderChoices();
 }
 
 function updateChoices(c) {
 	choices = c;
+	choices.push({
+		_id: '0',
+		choice: 'Skip'
+	});
 }
 
 function nextChoice() {
-	if(selectedChoice > choices.length - 1) {
+	if(selectedChoice === choices.length - 1) {
 		selectedChoice = 0;
 	}
 	else {
@@ -59,7 +88,7 @@ function nextChoice() {
 }
 
 function prevChoice() {
-	if(selectedChoice < 0) {
+	if(selectedChoice === 0) {
 		selectedChoice = choices.length -1
 	}
 	else {
@@ -75,11 +104,24 @@ function renderChoices() {
 function formatChoices() {
 	var output = '';
 	for(var i=0; i < choices.length; i++) {
+		var choice = choices[i].choice;
 		if(selectedChoice === i) {
-			output += '>'
+			output += '>';
 		}
-		output += choiceMap[i] + '. ' + choices[i] + '\n';
+		output += choiceMap[i] + '. ' + choice + '\n';
 	}
-	output += choiceMap[choices.length] + '. Skip';
 	return output;
+}
+
+function clearListeners() {
+	simply.off('singleClick');
+	simply.off('longClick');
+}
+
+function postAnswer() {
+	getQuestion();
+}
+
+function clearFields() {
+	choices = selectedChoice = null;
 }
