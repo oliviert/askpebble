@@ -20,6 +20,10 @@
 @property (nonatomic, strong) NSMutableArray *barWidthConstraints;
 @property (nonatomic, assign) BOOL barWidthConstraintsNeedUpdate;
 
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *doneButton;
+
+- (IBAction)doneButtonWasTapped;
+
 @end
 
 @implementation ASKQuestionResultsViewController
@@ -94,6 +98,14 @@
         previousBar = bar;
     }
 }
+
+#pragma mark - Actions
+
+- (IBAction)doneButtonWasTapped
+{
+    self.completionHandler();
+}
+
 
 #pragma mark - Updating Bar Widths
 

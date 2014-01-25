@@ -10,4 +10,6 @@
 
 @interface ASKQuestionResultsViewController : UIViewController
 
+@property (nonatomic, copy) void (^completionHandler)(); //required
+
 @end

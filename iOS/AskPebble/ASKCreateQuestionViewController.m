@@ -73,13 +73,33 @@
     return YES;
 }
 
+#pragma mark - Reset
+
+- (void)resetUI
+{
+    self.question = nil;
+    self.answerChoices = [NSMutableArray arrayWithArray:@[@"", @""]];
+    
+    self.createQuestionButton.enabled = [self isValidQuestion];
+    
+    [self.tableView reloadData];
+}
+
 #pragma mark - Actions
 
 - (IBAction)createQuestionButtonWasTapped
 {
-    ASKQuestionResultsViewController *resultsViewController = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([ASKQuestionResultsViewController class])];
+    UINavigationController *resultsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ASKQuestionResultsNavigationController"];
+    ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
     
-    [self.navigationController pushViewController:resultsViewController animated:YES];
+    __weak ASKCreateQuestionViewController *weakSelf = self;
+    resultsViewController.completionHandler = ^{
+        [weakSelf resetUI];
+        
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+    };
+    
+    [self presentViewController:resultsNavigationController animated:YES completion:nil];
 }
 
 #pragma mark - UITableView
@@ -126,12 +146,12 @@
         
         if (indexPath.section == 0) {
             textFieldCell.textField.placeholder = NSLocalizedString(@"Enter a question...", @"");
+            textFieldCell.textField.text = self.question;
         }
         else {
             NSString *placeholderFormat = NSLocalizedString(@"answer choice %i", @"");
-            NSString *placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
-            
-            textFieldCell.textField.placeholder = placeholder;
+            textFieldCell.textField.placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
+            textFieldCell.textField.text = self.answerChoices[indexPath.row];
         }
         
         if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
