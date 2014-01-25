@@ -6,7 +6,7 @@ simply.on('singleClick', function(e) {
 	        simply.subtitle(data.question, true);
 	        var body = '';
 	        for(var choice in data.choices) {
-	                body += choice + '. ' + data.choices[choice] + '\n';
+	                body += ((int)choice+1) + '. ' + data.choices[choice] + '\n';
 	        }
 	        simply.body(body);
 	        simply.scrollable(true);
