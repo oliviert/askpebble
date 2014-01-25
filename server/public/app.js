@@ -46,7 +46,7 @@ function getNextQuestion() {
 
 function updateChoices(c) {
 	choices = c;
-	choices.append({
+	choices.push({
 		_id: '0',
 	});
 }
