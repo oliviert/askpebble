@@ -34,15 +34,14 @@ function postAnswer(){
 
 function getNextQuestion() {
 	ajax({ url: url }, function(data) {
+		var data = JSON.parse(data);
 		qid = data._id;
 		selectedChoice = 0;
 		updateChoices(data.choices);
-		simply.title(typeof choices);
-		simply.subtitle(choices);
-		/*simply.text({
+		simply.text({
 			subtitle: data.question,
 			body: formatChoices(data.choices)
-		}, true);*/	
+		}, true);
 	});
 }
 
