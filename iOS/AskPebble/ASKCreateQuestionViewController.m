@@ -9,6 +9,7 @@
 #import "ASKCreateQuestionViewController.h"
 #import "ASKTextFieldCell.h"
 #import "ASKQuestionResultsViewController.h"
+#import "UITableView+IndexPathFromView.h"
 
 #define kMaxChoicesCount 4
 
@@ -17,9 +18,12 @@
 @property (nonatomic, strong) NSString *question;
 @property (nonatomic, strong) NSMutableArray *answerChoices;
 
-@property (nonatomic, weak) UITextField *activeTextField;
-
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *createQuestionButton;
+
+@property (nonatomic, strong) NSMutableDictionary *textFieldsByIndexPath;
+@property (nonatomic, copy) NSIndexPath *activeIndexPath;
+@property (nonatomic, weak) UITextField *activeTextField;
 
 - (IBAction)createQuestionButtonWasTapped;
 
@@ -36,6 +40,8 @@
     self.answerChoices = [NSMutableArray arrayWithArray:@[@"", @""]];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.textFieldsByIndexPath = [NSMutableDictionary dictionary];
 }
 
 - (void)viewDidLayoutSubviews
@@ -45,6 +51,26 @@
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, 0, 0);
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
+#pragma mark - Data Validation
+
+- (BOOL)isValidQuestion
+{
+    if ([self.question length] == 0) {
+        return NO;
+    }
+    
+    //only need 2 choices
+    for (NSInteger i = 0; i < 2; i++) {
+        NSString *answerChoice = self.answerChoices[i];
+        
+        if ([answerChoice length] == 0) {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 #pragma mark - Actions
@@ -91,9 +117,12 @@
         
         if (textFieldCell == nil) {
             textFieldCell = [[ASKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+            
+            textFieldCell.textField.delegate = self;
+            textFieldCell.textField.clearButtonMode = UITextFieldViewModeAlways;
         }
         
-        textFieldCell.textField.delegate = self;
+        self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
         
         if (indexPath.section == 0) {
             textFieldCell.textField.placeholder = NSLocalizedString(@"Enter a question...", @"");
@@ -105,6 +134,10 @@
             textFieldCell.textField.placeholder = placeholder;
         }
         
+        if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
+            [textFieldCell.textField becomeFirstResponder];
+        }
+        
         return textFieldCell;
     }
 }
@@ -114,6 +147,8 @@
     if (indexPath.section == 1 && indexPath.row == [self.answerChoices count]) {
         [self.answerChoices addObject:@""];
         
+        self.activeIndexPath = indexPath;
+
         [tableView beginUpdates];
         
         [tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -124,6 +159,8 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
         [tableView endUpdates];
+        
+        self.createQuestionButton.enabled = [self isValidQuestion];
     }
 }
 
@@ -131,24 +168,25 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    self.activeTextField = textField;
+    NSIndexPath *indexPath = [self.tableView indexPathForCellWithSubview:textField];
     
-    CGPoint correctedPoint = [self.activeTextField convertPoint:[self.activeTextField bounds].origin toView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:correctedPoint];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    self.activeTextField = textField;
+    self.activeIndexPath = indexPath;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     self.activeTextField = nil;
+    self.activeIndexPath = nil;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    CGPoint correctedPoint = [textField convertPoint:[textField bounds].origin toView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:correctedPoint];
+    NSIndexPath *indexPath = [self.tableView indexPathForCellWithSubview:textField];
     
     if (indexPath.section == 0) {
         self.question = newString;
@@ -156,6 +194,8 @@
     else {
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
     }
+    
+    self.createQuestionButton.enabled = [self isValidQuestion];
     
     return YES;
 }
