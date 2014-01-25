@@ -7,6 +7,7 @@ var qid;
 getNextQuestion();
 
 function enableChoiceSelect() {
+	simploy.off('singleClick');
 	simply.on('singleClick', function(e) {
 		if(e.button === 'up') {
 			prevChoice();
@@ -26,6 +27,11 @@ function enableChoiceSelect() {
 
 function disableChoiceSelect() {
 	simply.off('singleClick');
+	simply.on('singleClick', function(e) {
+		if(e.button === 'select') {
+			enableChoiceSelect();
+		}
+	});
 	simply.scrollable(true);
 }
 
