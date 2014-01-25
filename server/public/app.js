@@ -71,7 +71,7 @@ function registerAnswerLoopEvents() {
 	});	
 	simply.on('longClick', function(e) {
 		if(e.button === 'select') {
-			displayQuestionLoop();
+			questionLoop();
 		}
 	})
 	simply.scrollable(false);	
@@ -141,7 +141,7 @@ function postAnswer() {
 		data: {
 			uuid: uuid,
 			qid: data._id,
-			aid: choices[selectedChoice].choice,
+			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
 		nextQuestion();
