@@ -54,7 +54,7 @@ function updateChoices(c) {
 }
 
 function nextChoice() {
-	if(selectedChoice > choices.length - 1) {
+	if(selectedChoice > choices.length-2) {
 		selectedChoice = 0;
 	}
 	else {
@@ -65,7 +65,7 @@ function nextChoice() {
 
 function prevChoice() {
 	if(selectedChoice < 0) {
-		selectedChoice = choices.length -1
+		selectedChoice = choices.length -2
 	}
 	else {
 		selectedChoice--;
