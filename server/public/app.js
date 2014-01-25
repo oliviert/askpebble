@@ -4,7 +4,6 @@ var choiceMap = ["A", "B", "C", "D"];
 
 (function eventLoop() {
 	getQuestion(function(response) {
-		data = response;
 		displayQuestionLoop();
 		selectAnswerLoop();
 	});
