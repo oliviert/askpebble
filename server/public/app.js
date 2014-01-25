@@ -84,7 +84,7 @@ function formatChoices() {
 		if(selectedChoice === i) {
 			output += '>';
 		}
-		output += choiceMap[i] + '. ' + i + '\n';
+		output += choiceMap[i] + '. ' + i;
 	}
 	return output;
 }
