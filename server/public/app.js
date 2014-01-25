@@ -4,7 +4,7 @@ var choiceMap = ["A", "B", "C", "D"];
 
 getQuestion(function(response) {
 	clearFields();
-	displayQuestionLoop();
+	questionLoop();
 });
 
 function getQuestion(callback) {
@@ -14,33 +14,33 @@ function getQuestion(callback) {
 	});
 }
 
-function displayQuestionLoop() {
-	displayQuestionEvents();
-	displayQuestionRender(data);
+function questionLoop() {
+	registerQuestionLoopEvents();
+	renderQuestion(data);
 }
 
-function displayQuestionEvents() {
+function registerQuestionLoopEvents() {
 	clearListeners();
 	simply.on('singleClick', function(e) {
 		if(e.button === 'select') {
-			selectAnswerLoop();
+			answerLoop();
 		}
 	});
 	simply.scrollable(true);
 }
 
-function displayQuestionRender() {
+function renderQuestion() {
 	simply.text({
 		body: data.question
 	}, true);
 }
 
-function selectAnswerLoop() {
-	selectAnswerEvents();
-	selectAnswerRender();
+function answerLoop() {
+	registerAnswerLoopEvents();
+	renderAnswers();
 }
 
-function selectAnswerEvents() {
+function registerAnswerLoopEvents() {
 	clearListeners();
 	simply.on('singleClick', function(e) {
 		if(e.button === 'up') {
@@ -61,7 +61,7 @@ function selectAnswerEvents() {
 	simply.scrollable(false);	
 }
 
-function selectAnswerRender() {
+function renderAnswers() {
 	if(!choices) {
 		selectedChoice = 0;
 		updateChoices(data.choices);
