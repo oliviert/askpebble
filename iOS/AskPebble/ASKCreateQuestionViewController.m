@@ -17,10 +17,12 @@
 @property (nonatomic, strong) NSString *question;
 @property (nonatomic, strong) NSMutableArray *answerChoices;
 
-@property (nonatomic, weak) UITextField *activeTextField;
-
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *createQuestionButton;
+
+@property (nonatomic, strong) NSMutableDictionary *textFieldsByIndexPath;
+@property (nonatomic, copy) NSIndexPath *activeIndexPath;
+@property (nonatomic, weak) UITextField *activeTextField;
 
 - (IBAction)createQuestionButtonWasTapped;
 
@@ -37,6 +39,8 @@
     self.answerChoices = [NSMutableArray arrayWithArray:@[@"", @""]];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.textFieldsByIndexPath = [NSMutableDictionary dictionary];
 }
 
 - (void)viewDidLayoutSubviews
@@ -113,6 +117,8 @@
         
         textFieldCell.textField.delegate = self;
         
+        self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
+        
         if (indexPath.section == 0) {
             textFieldCell.textField.placeholder = NSLocalizedString(@"Enter a question...", @"");
         }
@@ -121,6 +127,10 @@
             NSString *placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
             
             textFieldCell.textField.placeholder = placeholder;
+        }
+        
+        if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
+            [textFieldCell.textField becomeFirstResponder];
         }
         
         return textFieldCell;
@@ -132,6 +142,8 @@
     if (indexPath.section == 1 && indexPath.row == [self.answerChoices count]) {
         [self.answerChoices addObject:@""];
         
+        self.activeIndexPath = indexPath;
+
         [tableView beginUpdates];
         
         [tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -151,16 +163,18 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    self.activeTextField = textField;
-    
     CGPoint correctedPoint = [self.activeTextField convertPoint:[self.activeTextField bounds].origin toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:correctedPoint];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    self.activeTextField = textField;
+    self.activeIndexPath = indexPath;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     self.activeTextField = nil;
+    self.activeIndexPath = nil;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
