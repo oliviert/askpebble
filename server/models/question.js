@@ -6,6 +6,7 @@ var questionSchema = mongoose.Schema({
     choice: String,
     count: { type: Number, default: 0 }
   }],
+  answers: { type: Array, default: [] },
   created_on: Date
 });
 

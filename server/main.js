@@ -5,12 +5,12 @@ var app = express();
 var mongoose = require('mongoose');
 
 if (process.env.NODE_ENV == 'production') {
-  app.set('mongo_url', process.env.MONGOHQ_URL);
+  app.set('mongoUri', process.env.MONGOHQ_URL);
 } else {
-  app.set('mongo_url', 'mongodb://localhost:27017/askpebble');
+  app.set('mongoUri', 'mongodb://localhost:27017/askpebble');
 }
 
-mongoose.connect(app.get('mongo_url'));
+mongoose.connect(app.get('mongoUri'));
 
 var Question = require('./models/question');
 var User = require('./models/user');
@@ -31,7 +31,7 @@ app.post('/ask', function(req, res) {
 
   question.save(function(err) {
     if (!err) {
-      res.send(200);
+      res.send(200, { qid: question._id });
     } else {
       console.log(err);
       res.send(400);
@@ -39,15 +39,26 @@ app.post('/ask', function(req, res) {
   });
 });
 
-app.get('/questions', function(req, res) {
+app.get('/questions/:uuid', function(req, res) {
   var now = new Date();
   var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  Question.find({ created_on: {$gte: today }}, function(err, questions) {
-    res.send(questions);
+  Question.find({ created_on: {$gte: today }, answers: { $nin: [req.body.uuid] }}, function(err, questions) {
+    res.json(questions);
+  });
+});
+
+app.get('/question/:id', function(req, res) {
+  Question.findOne({ _id: req.params.id }, function(err, question) {
+    if (err) {
+      res.send(400);
+    } else {
+      res.json(question);
+    }
   });
 });
 
 app.post('/answer', function(req, res) {
+  /*
   User.findOne({ uuid: req.body.uuid }, function(err, user) {
     if (!user) {
       user = new User({ uuid: req.body.uuid, answers: [req.body.qid] });
@@ -66,10 +77,11 @@ app.post('/answer', function(req, res) {
       res.send({ response: { message: 'Success!' }});
     }
   });
+  */
 
   // '0' skips a question
   if (req.body.aid !== '0') {
-    Question.update({ _id: req.body.qid, 'choices._id': req.body.aid }, { $inc: { 'choices.$.count': 1 }}, function(err) {
+    Question.update({ _id: req.body.qid, 'choices._id': req.body.aid, answers: { $nin: [req.body.uuid ] } }, { $inc: { 'choices.$.count': 1 }, $push: { answers: req.body.uuid }}, function(err, question) {
       if (err) {
         res.send(400);
       } else {
@@ -77,8 +89,6 @@ app.post('/answer', function(req, res) {
       }
     });
   }
-
-  res.send(200);
 });
 
 app.listen(app.get('port'), function() {
