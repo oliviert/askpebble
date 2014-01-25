@@ -21,12 +21,12 @@ function enableChoiceSelect() {
 			disableChoiceSelect();
 		}
 	});	
-	simply.setScrollable(false);
+	simply.scrollable(false);
 }
 
 function disableChoiceSelect() {
 	simply.off('singleClick');
-	simply.setScrollable(true);
+	simply.scrollable(true);
 }
 
 function postAnswer(){
