@@ -80,11 +80,11 @@ function renderChoices() {
 function formatChoices() {
 	var output = '';
 	for(var i=0; i < choices.length; i++) {
+		var choice = choices[i].choice;
 		if(selectedChoice === i) {
 			output += '>';
 		}
-		output += choiceMap[i] + '. ' + choices[i] + '\n';
+		output += choiceMap[i] + '. ' + choice + '\n';
 	}
-	output += choiceMap[choices.length] + '. Skip';
 	return output;
 }

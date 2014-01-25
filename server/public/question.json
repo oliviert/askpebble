@@ -1,4 +1,4 @@
 {
 	"question" : "??",
-	"choices" : ["five", "apple", "merp"]
+	"choices" : [{"choice":"five","choice":"apple","choice":"merp"}]
 }
