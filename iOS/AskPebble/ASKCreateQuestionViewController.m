@@ -117,10 +117,9 @@
         if (textFieldCell == nil) {
             textFieldCell = [[ASKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
             
+            textFieldCell.textField.delegate = self;
             textFieldCell.textField.clearButtonMode = UITextFieldViewModeAlways;
         }
-        
-        textFieldCell.textField.delegate = self;
         
         self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
         
