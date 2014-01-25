@@ -67,13 +67,17 @@ app.post('/answer', function(req, res) {
     }
   });
 
-  Question.update({ _id: req.body.qid, 'choices._id': req.body.aid }, { $inc: { 'choices.$.count': 1 }}, function(err) {
-    if (err) {
-      res.send(400);
-    } else {
-      res.send(200);
-    }
-  });
+  // '0' skips a question
+  if (req.body.aid !== '0') {
+    Question.update({ _id: req.body.qid, 'choices._id': req.body.aid }, { $inc: { 'choices.$.count': 1 }}, function(err) {
+      if (err) {
+        res.send(400);
+      } else {
+        res.send(200);
+      }
+    });
+  }
+
   res.send(200);
 });
 
