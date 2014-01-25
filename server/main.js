@@ -8,6 +8,7 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(express.logger());
 app.use(express.bodyParser());
+app.use(express.static(process.cwd() + '/public'));
 
 app.post('/ask', function(req, res) {
   res.send('received');
