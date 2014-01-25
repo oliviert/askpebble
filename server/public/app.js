@@ -3,6 +3,7 @@ var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
 getQuestion(function(response) {
+	clearFields();
 	displayQuestionLoop();
 });
 
@@ -61,8 +62,10 @@ function selectAnswerEvents() {
 }
 
 function selectAnswerRender() {
-	selectedChoice = 0;
-	updateChoices(data.choices);
+	if(!choices) {
+		selectedChoice = 0;
+		updateChoices(data.choices);
+	}
 	renderChoices();
 }
 
@@ -117,4 +120,8 @@ function clearListeners() {
 
 function postAnswer() {
 	getQuestion();
+}
+
+function clearFields() {
+	choices = selectedChoice = null;
 }
