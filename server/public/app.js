@@ -1,21 +1,33 @@
 var uuid = Pebble.getAccountToken();
-var domain = 'http://askpebble.herokuapp.com';
-var get_url = [domain, 'questions', uuid].join('/');
+//var domain = 'http://askpebble.herokuapp.com';
+//var get_url = [domain, 'questions', uuid].join('/');
+var get_url = 'http://askpebble.herokuapp.com/questions/' + uuid;
 var post_url = [domain, 'answer'].join('/');
 
+var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
-getQuestion(function(response) {
-	clearFields();
-	questionLoop();
+getQuestions(function(response) {
+	nextQuestion();
 });
 
-function getQuestion(callback) {
+function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		data = JSON.parse(response);
+		questionBuffer = JSON.parse(response);
 		callback(response);
 	});
+}
+
+function nextQuestion(callback) {
+	if(questionBuffer.length === 0) {
+		//no questions
+	}
+	else {
+		data = questionBuffer.shift();
+		clearFields();
+		questionLoop();
+	}
 }
 
 function questionLoop() {
@@ -132,7 +144,7 @@ function postAnswer() {
 			aid: choices[selectedChoice].choice,
 		}
 	}, function() {
-		getQuestion();
+		nextQuestion();
 	});
 }
 
