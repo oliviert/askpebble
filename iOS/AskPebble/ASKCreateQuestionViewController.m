@@ -13,7 +13,7 @@
 #import "ASKClient.h"
 
 #define kMaxChoicesCount 4
-#define kAnswerChoiceMaxLength 20
+#define kAnswerChoiceMaxLength 9
 
 @interface ASKCreateQuestionViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
