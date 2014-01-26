@@ -6,13 +6,15 @@ var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
+
+
 getQuestions(function(response) {
 	nextQuestion();
 });
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = response;
+		questionBuffer = JSON.parse(response);
 		if(callback) {
 			callback(response);
 		}
@@ -24,10 +26,11 @@ function nextQuestion() {
 	data = questionBuffer.shift();
 	if(data) {
 		questionLoop();
-		getQuestions();
 	}
 	else {
-		simply.title('No questions');
+		getQuestions(function() {
+			nextQuestion();
+		});
 	}
 }
 
