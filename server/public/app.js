@@ -196,13 +196,13 @@ function ericsMethod(response) {
 	var maxVotes = -1;
 	var results = [];
 
-	for(int i=0; i < choices.length; i++) {
+	for(var i=0; i < choices.length; i++) {
 		if(choices[i].count > maxVotes) {
 			maxVotes = choices[i].count; 
 		}
 	}
 
-	for(int i=0; i < choices.length; i++) {
+	for(var i=0; i < choices.length; i++) {
 		var result = {};
 		result.votes = choices[i].count;
 
