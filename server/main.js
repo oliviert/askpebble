@@ -93,6 +93,8 @@ app.post('/answer', function(req, res) {
         res.send(200);
       }
     });
+  } else {
+    res.send(200);
   }
 
   Question.findOne({ _id: req.body.qid }, function(err, question) {
