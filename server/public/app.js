@@ -1,10 +1,12 @@
-var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/12345';
+var uuid = Pebble.getAccountToken().toString();
+var get_url = 'http://askpebble.herokuapp.com/questions/' + uuid;
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
-var choiceMap = ["A", "B", "C", "D"];
+var choiceMap = ["A", "B", "C", "D", "E"];
+
+var noQuestions = false;
 
 getQuestions(function(response) {
 	nextQuestion();
@@ -12,7 +14,7 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = JSON.parse('[{"__v":0,"_id":"52e45453204ca402005a4029","created_on":"2014-01-26T00:18:27.096Z","question":"Favorite color?","answers":["54321"],"choices":[{"choice":"Red","_id":"52e45453204ca402005a402a","count":0},{"_id":"52e45453204ca402005a402b","choice":"Green","count":1}]}]');
+		questionBuffer = JSON.parse(response);
 		if(callback) {
 			callback(response);
 		}
@@ -23,11 +25,20 @@ function nextQuestion() {
 	clearFields();
 	data = questionBuffer.shift();
 	if(data) {
+		noQuestions = false;
 		questionLoop();
-		getQuestions();
 	}
 	else {
-		simply.title('No questions');
+		if(noQuestions) {
+			clearListeners();
+			simply.text({ title: 'No more questions' }, true);
+		}
+		else {
+			noQuestions = true;
+			getQuestions(function() {
+				nextQuestion();
+			});	
+		}
 	}
 }
 
@@ -140,13 +151,71 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: '12345',
+			uuid: uuid,
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
-		nextQuestion();
+		resultLoop();
 	});
+}
+
+function resultLoop() {
+	registerResultLoopEvents();
+	renderResults();
+}
+
+function registerResultLoopEvents() {
+	clearListeners();
+	simply.on('singleClick', function(e) {
+		if(e.button === 'select')
+			nextQuestion();
+	});
+}
+
+function renderResults() {
+	var results;	
+	setInterval(function() {
+		ajax({ url: 'http://askpebble.herokuapp.com/question/' + data._id }, function(response) {
+			var output = '';
+			results = ericsMethod(JSON.parse(response));
+			for(var i=0; i < results.length; i++) {
+				var result = results[i];
+				output += choiceMap[i] + '. ' + result.bars + ' ' + result.votes + '\n';
+			}
+			simply.text({
+				title: 'Results',
+				body: output
+			}, true);
+		});
+	}, 2000);
+}
+
+function ericsMethod(response) {
+	var choices = response.choices;
+	var maxBars = 10;
+	var maxVotes = -1;
+	var results = [];
+
+	for(var i=0; i < choices.length; i++) {
+		if(choices[i].count > maxVotes) {
+			maxVotes = choices[i].count; 
+		}
+	}
+
+	for(var i=0; i < choices.length; i++) {
+		var result = {};
+		result.votes = choices[i].count;
+
+		var bars = '';
+		for(var k=0; k < result.votes * maxBars / maxVotes; k++) {
+			bars += '|';
+		}
+		result.bars = bars;
+		results.push(result);
+	}
+
+	return results;
 }
 
 function clearFields() {

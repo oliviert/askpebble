@@ -108,7 +108,7 @@
     ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
     
     resultsViewController.question = self.question;
-    resultsViewController.answerChoices = self.answerChoices;
+    resultsViewController.answerChoices = answerChoices;
     
     __weak ASKCreateQuestionViewController *weakSelf = self;
     resultsViewController.completionHandler = ^{
@@ -172,6 +172,9 @@
             label.textColor = [UIColor lightGrayColor];
             [label sizeToFit];
             textFieldCell.textField.rightView = label;
+            
+            textFieldCell.textField.returnKeyType = UIReturnKeyNext;
+            textFieldCell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
         self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
@@ -186,6 +189,9 @@
             textFieldCell.textField.placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
             textFieldCell.textField.text = self.answerChoices[indexPath.row];
             textFieldCell.textField.rightViewMode = UITextFieldViewModeWhileEditing;
+            
+            UILabel *label = (UILabel *)textFieldCell.textField.rightView;
+            label.text = [NSString stringWithFormat:@"%lu/%i", (unsigned long)[textFieldCell.textField.text length], kAnswerChoiceMaxLength];
         }
         
         if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
@@ -215,6 +221,10 @@
         [tableView endUpdates];
         
         self.createQuestionButton.enabled = [self isValidQuestion];
+    }
+    else {
+        UITextField *textField = self.textFieldsByIndexPath[indexPath];
+        [textField becomeFirstResponder];
     }
 }
 
@@ -253,12 +263,32 @@
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
         
         UILabel *label = (UILabel *)textField.rightView;
-        label.text = [NSString stringWithFormat:@"%i/%i", [newString length], kAnswerChoiceMaxLength];
+        label.text = [NSString stringWithFormat:@"%lu/%i", (unsigned long)[newString length], kAnswerChoiceMaxLength];
     }
     
     self.createQuestionButton.enabled = [self isValidQuestion];
     
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSArray *indexPaths = [[self.textFieldsByIndexPath allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    NSIndexPath *currentIndexPath = [self.tableView indexPathForCellWithSubview:textField];
+    
+    NSInteger currentIndex = [indexPaths indexOfObject:currentIndexPath];
+    
+    if (currentIndex < [indexPaths count] - 1) {
+        NSIndexPath *nextIndexPath = indexPaths[currentIndex + 1];
+        UITextField *nextTextField =self.textFieldsByIndexPath[nextIndexPath];
+        [nextTextField becomeFirstResponder];
+    }
+    else {
+        [textField resignFirstResponder];
+    }
+    
+    return NO;
 }
 
 @end

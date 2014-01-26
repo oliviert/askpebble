@@ -49,17 +49,22 @@
 {
     [super viewDidLoad];
     
-    CGFloat barHeight = 30;
+    CGFloat barHeight = 50;
     UIView *previousBar = nil;
     
     NSArray *barColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor purpleColor]];
     
     self.barWidthConstraints = [NSMutableArray array];
+    self.responseCountLabels = [NSMutableArray array];
     
     for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
         UILabel *answerChoiceLabel = [[UILabel alloc] init];
         answerChoiceLabel.text = self.answerChoices[i];
         [self.view addSubview:answerChoiceLabel];
+        
+        UIView *backgroundBar = [[UIView alloc] init];
+        backgroundBar.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        [self.view addSubview:backgroundBar];
         
         UIView *bar = [[UIView alloc] init];
         bar.backgroundColor = barColors[i];
@@ -68,7 +73,7 @@
         NSInteger responseCount = [self.responseCounts[i] integerValue];
 
         UILabel *responseCountLabel = [[UILabel alloc] init];
-        responseCountLabel.text = [NSString stringWithFormat:@"%i", responseCount];
+        responseCountLabel.text = [NSString stringWithFormat:@"%i", (int)responseCount];
         responseCountLabel.textColor = [UIColor whiteColor];
         responseCountLabel.font = [UIFont boldSystemFontOfSize:17];
         [bar addSubview:responseCountLabel];
@@ -76,7 +81,7 @@
         
         NSDictionary *metrics = @{@"barHeight": @(barHeight)};
         
-        NSMutableDictionary *views = [NSDictionaryOfVariableBindings(bar, _questionLabel, answerChoiceLabel, responseCountLabel) mutableCopy];
+        NSMutableDictionary *views = [NSDictionaryOfVariableBindings(bar, _questionLabel, answerChoiceLabel, responseCountLabel, backgroundBar) mutableCopy];
         if (previousBar != nil) {
             [views addEntriesFromDictionary:NSDictionaryOfVariableBindings(previousBar)];
         }
@@ -84,9 +89,11 @@
         answerChoiceLabel.translatesAutoresizingMaskIntoConstraints = NO;
         bar.translatesAutoresizingMaskIntoConstraints = NO;
         responseCountLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        backgroundBar.translatesAutoresizingMaskIntoConstraints = NO;
         
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[answerChoiceLabel]" options:0 metrics:metrics views:views]];
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[bar]" options:0 metrics:metrics views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[backgroundBar(280)]" options:0 metrics:metrics views:views]];
         
         NSLayoutConstraint *barWidthConstraint = [[NSLayoutConstraint constraintsWithVisualFormat:@"[bar(0)]" options:0 metrics:metrics views:views] firstObject];
         [self.view addConstraint:barWidthConstraint];
@@ -100,6 +107,7 @@
         }
         
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[answerChoiceLabel]-5-[bar(barHeight)]" options:0 metrics:metrics views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[answerChoiceLabel]-5-[backgroundBar(barHeight)]" options:0 metrics:metrics views:views]];
         
         [bar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[responseCountLabel]-10-|" options:0 metrics:metrics views:views]];
         [bar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[responseCountLabel]|" options:0 metrics:metrics views:views]];
@@ -155,7 +163,7 @@
     for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
         UILabel *responseCountLabel = self.responseCountLabels[i];
         
-        responseCountLabel.text = [NSString stringWithFormat:@"%i", [self.responseCounts[i] integerValue]];
+        responseCountLabel.text = [NSString stringWithFormat:@"%i", [self.responseCounts[i] intValue]];
     }
 }
 
@@ -164,7 +172,7 @@
     [self updateBarWidthConstraints];
     
     if (animated) {
-        [UIView animateWithDuration:0.1 animations:^{
+        [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];
         }];
     }
