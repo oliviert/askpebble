@@ -30,6 +30,7 @@ function nextQuestion() {
 	}
 	else {
 		if(noQuestions) {
+			clearListeners();
 			simply.text({ title: 'No more questions' }, true);
 		}
 		else {
