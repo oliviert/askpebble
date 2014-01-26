@@ -15,13 +15,12 @@
 @interface ASKQuestionResultsViewController ()
 
 @property (nonatomic, weak) IBOutlet UILabel *questionLabel;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *doneButton;
+@property (nonatomic, strong) NSMutableArray *responseCountLabels;
 
 @property (nonatomic, strong) NSArray *responseCounts;
 
 @property (nonatomic, strong) NSMutableArray *barWidthConstraints;
-@property (nonatomic, assign) BOOL barWidthConstraintsNeedUpdate;
-
-@property (nonatomic, weak) IBOutlet UIBarButtonItem *doneButton;
 
 @property (nonatomic, strong) NSTimer *updateTimer;
 
@@ -73,6 +72,7 @@
         responseCountLabel.textColor = [UIColor whiteColor];
         responseCountLabel.font = [UIFont boldSystemFontOfSize:17];
         [bar addSubview:responseCountLabel];
+        [self.responseCountLabels addObject:responseCountLabel];
         
         NSDictionary *metrics = @{@"barHeight": @(barHeight)};
         
@@ -128,7 +128,7 @@
         }
         
         self.responseCounts = [question.answerChoices valueForKey:@"responseCount"];
-        [self updateBarWidthsAnimated:YES];
+        [self updateBarGraphAnimated:YES];
     }];
 }
 
@@ -142,7 +142,22 @@
 }
 
 
-#pragma mark - Updating Bar Widths
+#pragma mark - Updating UI
+
+- (void)updateBarGraphAnimated:(BOOL)animated
+{
+    [self updateResponseCountLabels];
+    [self updateBarWidthsAnimated:animated];
+}
+
+- (void)updateResponseCountLabels
+{
+    for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
+        UILabel *responseCountLabel = self.responseCountLabels[i];
+        
+        responseCountLabel.text = [NSString stringWithFormat:@"%i", [self.responseCounts[i] integerValue]];
+    }
+}
 
 - (void)updateBarWidthsAnimated:(BOOL)animated
 {
