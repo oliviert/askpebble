@@ -12,7 +12,7 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer.concat([response]);
+		questionBuffer.concat(JSON.parse('[{"__v":0,"_id":"52e45453204ca402005a4029","created_on":"2014-01-26T00:18:27.096Z","question":"Favorite color?","answers":["54321"],"choices":[{"choice":"Red","_id":"52e45453204ca402005a402a","count":0},{"_id":"52e45453204ca402005a402b","choice":"Green","count":1}]}]'));
 		if(callback) {
 			callback(response);
 		}
