@@ -189,6 +189,9 @@
             textFieldCell.textField.placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
             textFieldCell.textField.text = self.answerChoices[indexPath.row];
             textFieldCell.textField.rightViewMode = UITextFieldViewModeWhileEditing;
+            
+            UILabel *label = (UILabel *)textFieldCell.textField.rightView;
+            label.text = [NSString stringWithFormat:@"%i/%i", [textFieldCell.textField.text length], kAnswerChoiceMaxLength];
         }
         
         if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
