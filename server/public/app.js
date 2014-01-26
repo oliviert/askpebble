@@ -24,10 +24,12 @@ function nextQuestion() {
 	data = questionBuffer.shift();
 	if(data) {
 		questionLoop();
-		getQuestions();
 	}
 	else {
-		simply.title('No questions');
+		//simply.title('No questions');
+		getQuestions(function() {
+			nextQuestion();
+		});
 	}
 }
 
