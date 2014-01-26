@@ -10,6 +10,9 @@
 #import "ASKQuestion.h"
 #import "ASKAnswerChoice.h"
 
+#define kDevelopmentURLString @"http://localhost:3000"
+#define kProductionURLString @"http://askpebble.herokuapp.com"
+
 @implementation ASKClient
 
 + (instancetype)sharedClient
@@ -18,7 +21,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURL *URL = [NSURL URLWithString:@"http://askpebble.herokuapp.com"];
+        NSURL *URL = [NSURL URLWithString:kProductionURLString];
         sharedClient = [[self alloc] initWithBaseURL:URL];
         sharedClient.responseSerializer.acceptableContentTypes = [NSSet setWithArray:@[@"text/plain", @"application/json"]];
     });

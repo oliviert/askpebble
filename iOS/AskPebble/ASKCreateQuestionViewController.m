@@ -174,6 +174,7 @@
             textFieldCell.textField.rightView = label;
             
             textFieldCell.textField.returnKeyType = UIReturnKeyNext;
+            textFieldCell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
         self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
@@ -217,6 +218,10 @@
         [tableView endUpdates];
         
         self.createQuestionButton.enabled = [self isValidQuestion];
+    }
+    else {
+        UITextField *textField = self.textFieldsByIndexPath[indexPath];
+        [textField becomeFirstResponder];
     }
 }
 
