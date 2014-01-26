@@ -12,9 +12,7 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		for(var i in response) {
-			questionBuffer.push(response[i]);
-		}
+		questionBuffer.concat([response]);
 		if(callback) {
 			callback(response);
 		}
