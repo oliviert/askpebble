@@ -4,7 +4,7 @@ var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
-var choiceMap = ["A", "B", "C", "D"];
+var choiceMap = ["A", "B", "C", "D", "E"];
 
 var noQuestions = false;
 
@@ -156,8 +156,65 @@ function postAnswer() {
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
+		resultLoop();
+	});
+}
+
+function resultLoop() {
+	registerResultLoopEvents();
+	renderResults();
+}
+
+function registerResultLoopEvents() {
+	clearListeners();
+	simply.on('singleClick', function() {
 		nextQuestion();
 	});
+}
+
+function renderResults() {
+	var results;	
+	setInterval(function() {
+		ajax({ url: 'http://askpebble.herokuapp.com/question/' + data._id }, function(response) {
+			var output = '';
+			results = ericsMethod(JSON.parse(response));
+			for(var i=0; i < results.length; i++) {
+				var result = results[i];
+				output += choiceMap[i] + '. ' + result.bars + ' ' + result.votes + '\n';
+			}
+			simply.text({
+				title: 'Results',
+				body: output
+			}, true);
+		});
+	}, 2000);
+}
+
+function ericsMethod(response) {
+	var choices = response.choices;
+	var maxBars = 10;
+	var maxVotes = -1;
+	var results = [];
+
+	for(int i=0; i < choices.length; i++) {
+		if(choices[i].count > maxVotes) {
+			maxVotes = choices[i].count; 
+		}
+	}
+
+	for(int i=0; i < choices.length; i++) {
+		var result = {};
+		result.votes = choices[i].count;
+
+		var bars = '';
+		for(int k=0; k < result.votes * maxBars / maxVotes; k++) {
+			bars += '|';
+		}
+		result.bars = bars;
+		results.push(result);
+	}
+
+	return results;
 }
 
 function clearFields() {
