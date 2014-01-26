@@ -32,12 +32,15 @@ function nextQuestion() {
 		if(noQuestions) {
 			clearListeners();
 			simply.text({ title: 'No more questions' }, true);
+			getQuestions(function() {
+				nextQuestion();
+			});
 		}
 		else {
 			noQuestions = true;
 			getQuestions(function() {
 				nextQuestion();
-			});	
+			});
 		}
 	}
 }
@@ -181,7 +184,8 @@ function renderResults() {
 			results = ericsMethod(JSON.parse(response));
 			for(var i=0; i < results.length; i++) {
 				var result = results[i];
-				output += choiceMap[i] + '. ' + result.bars + ' ' + result.votes + '\n';
+				output += choiceMap[i] + '. ' + result.bars 
+					+ ' ' + result.votes + '(' + result.percent + ')\n';
 			}
 			simply.text({
 				title: 'Results',
@@ -195,12 +199,14 @@ function ericsMethod(response) {
 	var choices = response.choices;
 	var maxBars = 10;
 	var maxVotes = -1;
+	var sumVotes = 0;
 	var results = [];
 
 	for(var i=0; i < choices.length; i++) {
 		if(choices[i].count > maxVotes) {
 			maxVotes = choices[i].count; 
 		}
+		sumVotes += choices[i].count;
 	}
 
 	for(var i=0; i < choices.length; i++) {
@@ -212,6 +218,7 @@ function ericsMethod(response) {
 			bars += '|';
 		}
 		result.bars = bars;
+		result.percent = result.votes / maxVotes;
 		results.push(result);
 	}
 
