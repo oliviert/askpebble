@@ -14,7 +14,7 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = response;
+		questionBuffer = JSON.parse(response);
 		if(callback) {
 			callback(response);
 		}
