@@ -1,6 +1,6 @@
 var uuid = Pebble.getAccountToken();
-var get_url = 'http://10.55.50.178:3000/questions/12345';
-var post_url = 'http://10.55.50.178:3000/answer';
+var get_url = 'http://askpebble.herokuapp.com/questions/12345';
+var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
@@ -12,7 +12,6 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		console.log(response);
 		questionBuffer = response;
 		if(callback) {
 			callback(response);
