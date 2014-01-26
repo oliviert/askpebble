@@ -191,7 +191,7 @@
             textFieldCell.textField.rightViewMode = UITextFieldViewModeWhileEditing;
             
             UILabel *label = (UILabel *)textFieldCell.textField.rightView;
-            label.text = [NSString stringWithFormat:@"%i/%i", [textFieldCell.textField.text length], kAnswerChoiceMaxLength];
+            label.text = [NSString stringWithFormat:@"%lu/%i", (unsigned long)[textFieldCell.textField.text length], kAnswerChoiceMaxLength];
         }
         
         if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
@@ -263,7 +263,7 @@
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
         
         UILabel *label = (UILabel *)textField.rightView;
-        label.text = [NSString stringWithFormat:@"%i/%i", [newString length], kAnswerChoiceMaxLength];
+        label.text = [NSString stringWithFormat:@"%lu/%i", (unsigned long)[newString length], kAnswerChoiceMaxLength];
     }
     
     self.createQuestionButton.enabled = [self isValidQuestion];

@@ -73,7 +73,7 @@
         NSInteger responseCount = [self.responseCounts[i] integerValue];
 
         UILabel *responseCountLabel = [[UILabel alloc] init];
-        responseCountLabel.text = [NSString stringWithFormat:@"%i", responseCount];
+        responseCountLabel.text = [NSString stringWithFormat:@"%i", (int)responseCount];
         responseCountLabel.textColor = [UIColor whiteColor];
         responseCountLabel.font = [UIFont boldSystemFontOfSize:17];
         [bar addSubview:responseCountLabel];
@@ -163,7 +163,7 @@
     for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
         UILabel *responseCountLabel = self.responseCountLabels[i];
         
-        responseCountLabel.text = [NSString stringWithFormat:@"%i", [self.responseCounts[i] integerValue]];
+        responseCountLabel.text = [NSString stringWithFormat:@"%i", [self.responseCounts[i] intValue]];
     }
 }
 
