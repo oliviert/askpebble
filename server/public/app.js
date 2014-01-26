@@ -218,7 +218,7 @@ function ericsMethod(response) {
 			bars += '|';
 		}
 		result.bars = bars;
-		result.percent = result.votes / maxVotes;
+		result.percent = parseInt(result.votes / maxVotes * 10) + '%';
 		results.push(result);
 	}
 
