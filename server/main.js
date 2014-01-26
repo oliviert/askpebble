@@ -42,7 +42,7 @@ app.post('/ask', function(req, res) {
 app.get('/questions/:uuid', function(req, res) {
   var now = new Date();
   var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  Question.find({ created_on: {$gte: today }, answers: { $nin: [req.body.uuid] }}, function(err, questions) {
+  Question.find({ created_on: {$gte: today }, answers: { $nin: [req.params.uuid] }}, function(err, questions) {
     res.json(questions);
   });
 });
@@ -80,6 +80,11 @@ app.post('/answer', function(req, res) {
   */
 
   // '0' skips a question
+  if (!req.body.qid || !req.body.aid || !req.body.uuid) {
+    res.send(400);
+    return
+  }
+
   if (req.body.aid !== '0') {
     Question.update({ _id: req.body.qid, 'choices._id': req.body.aid, answers: { $nin: [req.body.uuid ] } }, { $inc: { 'choices.$.count': 1 }, $push: { answers: req.body.uuid }}, function(err, question) {
       if (err) {

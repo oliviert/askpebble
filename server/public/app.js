@@ -1,21 +1,31 @@
 var uuid = Pebble.getAccountToken();
-var domain = 'http://askpebble.herokuapp.com';
-var get_url = [domain, 'questions', uuid].join('/');
-var post_url = [domain, 'answer'].join('/');
+var get_url = 'http://askpebble.herokuapp.com/questions/54321';
+var post_url = 'http://askpebble.herokuapp.com/answer';
 
+var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
-getQuestion(function(response) {
-	clearFields();
-	questionLoop();
+getQuestions(function(response) {
+	nextQuestion();
 });
 
-function getQuestion(callback) {
+function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		data = JSON.parse(response);
+		questionBuffer.concat(JSON.parse(response));
 		callback(response);
 	});
+}
+
+function nextQuestion(callback) {
+	data = questionBuffer.shift();
+	clearFields();
+	if(data) {
+		questionLoop();
+	}
+	else {
+		simply.title('No questions');
+	}
 }
 
 function questionLoop() {
@@ -59,7 +69,7 @@ function registerAnswerLoopEvents() {
 	});	
 	simply.on('longClick', function(e) {
 		if(e.button === 'select') {
-			displayQuestionLoop();
+			questionLoop();
 		}
 	})
 	simply.scrollable(false);	
@@ -127,12 +137,12 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: uuid,
+			uuid: '54321',
 			qid: data._id,
-			aid: choices[selectedChoice].choice,
+			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
-		getQuestion();
+		nextQuestion();
 	});
 }
 
