@@ -13,7 +13,9 @@ getQuestions(function(response) {
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
 		questionBuffer.concat(JSON.parse(response));
-		callback(response);
+		if(callback) {
+			callback(response);
+		}
 	});
 }
 
@@ -22,6 +24,7 @@ function nextQuestion(callback) {
 	clearFields();
 	if(data) {
 		questionLoop();
+		getQuestions();
 	}
 	else {
 		simply.title('No questions');
