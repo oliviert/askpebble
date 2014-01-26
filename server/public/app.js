@@ -7,6 +7,7 @@ var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D", "E"];
 
 var noQuestions = false;
+var interval;
 
 getQuestions(function(response) {
 	nextQuestion();
@@ -32,12 +33,17 @@ function nextQuestion() {
 		if(noQuestions) {
 			clearListeners();
 			simply.text({ title: 'No more questions' }, true);
+			setTimeout(function() {
+				getQuestions(function() {
+					nextQuestion();
+				});	
+			}, 5000)			
 		}
 		else {
 			noQuestions = true;
 			getQuestions(function() {
 				nextQuestion();
-			});	
+			});
 		}
 	}
 }
@@ -168,23 +174,28 @@ function resultLoop() {
 function registerResultLoopEvents() {
 	clearListeners();
 	simply.on('singleClick', function(e) {
-		if(e.button === 'select')
+		if(e.button === 'select') {
+			clearInterval(interval)
 			nextQuestion();
+		}
 	});
+	simply.scrollable(true);
 }
 
 function renderResults() {
 	var results;	
-	setInterval(function() {
+	interval = setInterval(function() {
 		ajax({ url: 'http://askpebble.herokuapp.com/question/' + data._id }, function(response) {
 			var output = '';
 			results = ericsMethod(JSON.parse(response));
 			for(var i=0; i < results.length; i++) {
 				var result = results[i];
-				output += choiceMap[i] + '. ' + result.bars + ' ' + result.votes + '\n';
+				output += choiceMap[i] + '. ' + result.bars 
+					+ ' ' + result.votes + '\n    ' + result.choice
+					+ '\n';
 			}
+			simply.style('small');
 			simply.text({
-				title: 'Results',
 				body: output
 			}, true);
 		});
@@ -193,7 +204,7 @@ function renderResults() {
 
 function ericsMethod(response) {
 	var choices = response.choices;
-	var maxBars = 10;
+	var maxBars = 25;
 	var maxVotes = -1;
 	var results = [];
 
@@ -212,6 +223,7 @@ function ericsMethod(response) {
 			bars += '|';
 		}
 		result.bars = bars;
+		result.choice = choices[i].choice;
 		results.push(result);
 	}
 
