@@ -167,8 +167,9 @@ function resultLoop() {
 
 function registerResultLoopEvents() {
 	clearListeners();
-	simply.on('singleClick', function() {
-		nextQuestion();
+	simply.on('singleClick', function(e) {
+		if(e.button === 'select')
+			nextQuestion();
 	});
 }
 
