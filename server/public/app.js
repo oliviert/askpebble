@@ -176,6 +176,7 @@ function registerResultLoopEvents() {
 		if(e.button === 'select')
 			nextQuestion();
 	});
+	simply.scrollable(true);
 }
 
 function renderResults() {
@@ -187,10 +188,10 @@ function renderResults() {
 			for(var i=0; i < results.length; i++) {
 				var result = results[i];
 				output += choiceMap[i] + '. ' + result.bars 
-					+ ' ' + result.votes + '\n    ' + result.choice;
+					+ ' ' + result.votes + '\n    ' + result.choice
+					+ '\n';
 			}
 			simply.text({
-				title: 'Results',
 				body: output
 			}, true);
 		});
