@@ -106,7 +106,7 @@ function renderAnswers() {
 function updateChoices(c) {
 	choices = c;
 	choices.push({
-		qid: '0',
+		_id: '0',
 		choice: 'Skip'
 	});
 }
@@ -159,7 +159,7 @@ function postAnswer() {
 		url: post_url,
 		data: {
 			uuid: uuid,
-			qid: data.qid,
+			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
