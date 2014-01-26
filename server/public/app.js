@@ -6,8 +6,10 @@ var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
+
+
 getQuestions(function(response) {
-	simply.title("asdf");
+	nextQuestion();
 });
 
 function getQuestions(callback) {
