@@ -132,7 +132,6 @@ function prevChoice() {
 }
 
 function renderChoices() {
-	simply.style('small');
 	simply.body(formatChoices());
 }
 
@@ -205,7 +204,7 @@ function renderResults() {
 
 function ericsMethod(response) {
 	var choices = response.choices;
-	var maxBars = 15;
+	var maxBars = 25;
 	var maxVotes = -1;
 	var results = [];
 
