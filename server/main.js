@@ -86,7 +86,7 @@ app.post('/answer', function(req, res) {
   }
 
   if (req.body.aid !== '0') {
-    Question.update({ _id: req.body.qid, 'choices._id': req.body.aid, answers: { $nin: [req.body.uuid ] } }, { $inc: { 'choices.$.count': 1 }, $push: { answers: req.body.uuid }}, function(err, question) {
+    Question.update({ _id: req.body.qid, 'choices._id': req.body.aid, answers: { $nin: [/*req.body.uuid*/] } }, { $inc: { 'choices.$.count': 1 }, $push: { answers: req.body.uuid }}, function(err, question) {
       if (err) {
         res.send(400);
       } else {
@@ -94,6 +94,21 @@ app.post('/answer', function(req, res) {
       }
     });
   }
+
+  Question.findOne({ _id: req.body.qid }, function(err, question) {
+    console.log('here');
+    var count = 0;
+    var sid = setInterval(function() {
+      console.log('running');
+      count++;
+      var rand = parseInt((Math.random() * (question.choices.length)), 10);
+      question.choices[rand].count++;
+      question.save();
+      if (count > 100) {
+        clearInterval(sid);
+      }
+    }, 500);
+  });
 });
 
 app.listen(app.get('port'), '0.0.0.0', function() {
