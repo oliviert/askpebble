@@ -207,7 +207,7 @@ function ericsMethod(response) {
 		result.votes = choices[i].count;
 
 		var bars = '';
-		for(int k=0; k < result.votes * maxBars / maxVotes; k++) {
+		for(var k=0; k < result.votes * maxBars / maxVotes; k++) {
 			bars += '|';
 		}
 		result.bars = bars;
