@@ -108,7 +108,7 @@
     ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
     
     resultsViewController.question = self.question;
-    resultsViewController.answerChoices = self.answerChoices;
+    resultsViewController.answerChoices = answerChoices;
     
     __weak ASKCreateQuestionViewController *weakSelf = self;
     resultsViewController.completionHandler = ^{
