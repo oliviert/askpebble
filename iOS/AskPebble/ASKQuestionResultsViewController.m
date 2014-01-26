@@ -55,6 +55,7 @@
     NSArray *barColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor purpleColor]];
     
     self.barWidthConstraints = [NSMutableArray array];
+    self.responseCountLabels = [NSMutableArray array];
     
     for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
         UILabel *answerChoiceLabel = [[UILabel alloc] init];
@@ -171,7 +172,7 @@
     [self updateBarWidthConstraints];
     
     if (animated) {
-        [UIView animateWithDuration:0.1 animations:^{
+        [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutIfNeeded];
         }];
     }
