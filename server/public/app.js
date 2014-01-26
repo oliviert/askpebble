@@ -4,9 +4,10 @@ var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
-var choiceMap = ["A", "B", "C", "D"];
+var choiceMap = ["A", "B", "C", "D", "E"];
 
 var noQuestions = false;
+var interval;
 
 getQuestions(function(response) {
 	nextQuestion();
@@ -32,12 +33,17 @@ function nextQuestion() {
 		if(noQuestions) {
 			clearListeners();
 			simply.text({ title: 'No more questions' }, true);
+			setTimeout(function() {
+				getQuestions(function() {
+					nextQuestion();
+				});	
+			}, 5000)			
 		}
 		else {
 			noQuestions = true;
 			getQuestions(function() {
 				nextQuestion();
-			});	
+			});
 		}
 	}
 }
@@ -156,8 +162,72 @@ function postAnswer() {
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
-		nextQuestion();
+		resultLoop();
 	});
+}
+
+function resultLoop() {
+	registerResultLoopEvents();
+	renderResults();
+}
+
+function registerResultLoopEvents() {
+	clearListeners();
+	simply.on('singleClick', function(e) {
+		if(e.button === 'select') {
+			clearInterval(interval)
+			nextQuestion();
+		}
+	});
+	simply.scrollable(true);
+}
+
+function renderResults() {
+	var results;	
+	interval = setInterval(function() {
+		ajax({ url: 'http://askpebble.herokuapp.com/question/' + data._id }, function(response) {
+			var output = '';
+			results = ericsMethod(JSON.parse(response));
+			for(var i=0; i < results.length; i++) {
+				var result = results[i];
+				output += choiceMap[i] + '. ' + result.bars 
+					+ ' ' + result.votes + '\n    ' + result.choice
+					+ '\n';
+			}
+			simply.style('small');
+			simply.text({
+				body: output
+			}, true);
+		});
+	}, 2000);
+}
+
+function ericsMethod(response) {
+	var choices = response.choices;
+	var maxBars = 25;
+	var maxVotes = -1;
+	var results = [];
+
+	for(var i=0; i < choices.length; i++) {
+		if(choices[i].count > maxVotes) {
+			maxVotes = choices[i].count; 
+		}
+	}
+
+	for(var i=0; i < choices.length; i++) {
+		var result = {};
+		result.votes = choices[i].count;
+
+		var bars = '';
+		for(var k=0; k < result.votes * maxBars / maxVotes; k++) {
+			bars += '|';
+		}
+		result.bars = bars;
+		result.choice = choices[i].choice;
+		results.push(result);
+	}
+
+	return results;
 }
 
 function clearFields() {
