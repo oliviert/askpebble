@@ -12,19 +12,19 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = JSON.parse(response);
+		questionBuffer.concat(JSON.parse(response));
 		callback(response);
 	});
 }
 
 function nextQuestion(callback) {
-	if(questionBuffer.length === 0) {
-		//no questions
+	data = questionBuffer.shift();
+	clearFields();
+	if(data) {
+		questionLoop();
 	}
 	else {
-		data = questionBuffer.shift();
-		clearFields();
-		questionLoop();
+		simply.title('No questions');
 	}
 }
 
@@ -142,7 +142,7 @@ function postAnswer() {
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
-		simply.body('posted');
+		nextQuestion();
 	});
 }
 
