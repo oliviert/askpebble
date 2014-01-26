@@ -10,6 +10,4 @@
 
 @interface ASKAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
-
 @end
