@@ -10,8 +10,10 @@
 #import "ASKTextFieldCell.h"
 #import "ASKQuestionResultsViewController.h"
 #import "UITableView+IndexPathFromView.h"
+#import "ASKClient.h"
 
 #define kMaxChoicesCount 4
+#define kAnswerChoiceMaxLength 9
 
 @interface ASKCreateQuestionViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
@@ -70,16 +72,60 @@
         }
     }
     
+    for (NSString *answerChoice in self.answerChoices) {
+        if ([answerChoice length] > kAnswerChoiceMaxLength) {
+            return NO;
+        }
+    }
+    
     return YES;
+}
+
+#pragma mark - Reset
+
+- (void)resetUI
+{
+    self.question = nil;
+    self.answerChoices = [NSMutableArray arrayWithArray:@[@"", @""]];
+    
+    self.createQuestionButton.enabled = [self isValidQuestion];
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - Actions
 
 - (IBAction)createQuestionButtonWasTapped
 {
-    ASKQuestionResultsViewController *resultsViewController = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([ASKQuestionResultsViewController class])];
+    NSMutableArray *answerChoices = [NSMutableArray array];
+    for (NSString *answerChoice in self.answerChoices) {
+        if ([answerChoice length] > 0) {
+            [answerChoices addObject:answerChoice];
+        }
+    }
     
-    [self.navigationController pushViewController:resultsViewController animated:YES];
+    UINavigationController *resultsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ASKQuestionResultsNavigationController"];
+    ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
+    
+    resultsViewController.question = self.question;
+    resultsViewController.answerChoices = self.answerChoices;
+    
+    __weak ASKCreateQuestionViewController *weakSelf = self;
+    resultsViewController.completionHandler = ^{
+        [weakSelf resetUI];
+        
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+    };
+    
+    [self presentViewController:resultsNavigationController animated:YES completion:nil];
+    [[ASKClient sharedClient] askQuestion:self.question withAnswerChoices:answerChoices completionHandler:^(NSString *questionID, NSError *error) {
+        if ([questionID length] > 0) {
+            resultsViewController.questionID = questionID;
+        }
+        else {
+            NSLog(@"Error:%@", [error userInfo]);
+        }
+    }];
 }
 
 #pragma mark - UITableView
@@ -120,18 +166,26 @@
             
             textFieldCell.textField.delegate = self;
             textFieldCell.textField.clearButtonMode = UITextFieldViewModeAlways;
+            
+            UILabel *label = [[UILabel alloc] init];
+            label.text = @"0/9";
+            label.textColor = [UIColor lightGrayColor];
+            [label sizeToFit];
+            textFieldCell.textField.rightView = label;
         }
         
         self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
         
         if (indexPath.section == 0) {
             textFieldCell.textField.placeholder = NSLocalizedString(@"Enter a question...", @"");
+            textFieldCell.textField.text = self.question;
+            textFieldCell.textField.rightViewMode = UITextFieldViewModeNever;
         }
         else {
             NSString *placeholderFormat = NSLocalizedString(@"answer choice %i", @"");
-            NSString *placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
-            
-            textFieldCell.textField.placeholder = placeholder;
+            textFieldCell.textField.placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
+            textFieldCell.textField.text = self.answerChoices[indexPath.row];
+            textFieldCell.textField.rightViewMode = UITextFieldViewModeWhileEditing;
         }
         
         if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
@@ -192,7 +246,14 @@
         self.question = newString;
     }
     else {
+        if ([newString length] > kAnswerChoiceMaxLength) {
+            return NO;
+        }
+        
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
+        
+        UILabel *label = (UILabel *)textField.rightView;
+        label.text = [NSString stringWithFormat:@"%i/%i", [newString length], kAnswerChoiceMaxLength];
     }
     
     self.createQuestionButton.enabled = [self isValidQuestion];
