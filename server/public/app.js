@@ -6,7 +6,7 @@ var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
-boolean noQuestions = false;
+var noQuestions = false;
 
 getQuestions(function(response) {
 	nextQuestion();
