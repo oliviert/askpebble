@@ -7,7 +7,7 @@ var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
 getQuestions(function(response) {
-	nextQuestion();
+	simply.title("asdf");
 });
 
 function getQuestions(callback) {
@@ -26,7 +26,6 @@ function nextQuestion() {
 		questionLoop();
 	}
 	else {
-		//simply.title('No questions');
 		getQuestions(function() {
 			nextQuestion();
 		});
