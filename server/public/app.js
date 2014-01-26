@@ -1,12 +1,12 @@
-var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/12345';
+var uuid = Pebble.getAccountToken().toString();
+var get_url = 'http://askpebble.herokuapp.com/questions/' + uuid;
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D"];
 
-
+var noQuestions = false;
 
 getQuestions(function(response) {
 	nextQuestion();
@@ -25,12 +25,20 @@ function nextQuestion() {
 	clearFields();
 	data = questionBuffer.shift();
 	if(data) {
+		noQuestions = false;
 		questionLoop();
 	}
 	else {
-		getQuestions(function() {
-			nextQuestion();
-		});
+		if(noQuestions) {
+			clearListeners();
+			simply.text({ title: 'No more questions' }, true);
+		}
+		else {
+			noQuestions = true;
+			getQuestions(function() {
+				nextQuestion();
+			});	
+		}
 	}
 }
 
@@ -143,7 +151,7 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: '12345',
+			uuid: uuid,
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
