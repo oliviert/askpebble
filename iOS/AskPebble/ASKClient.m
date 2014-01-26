@@ -18,7 +18,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURL *URL = [NSURL URLWithString:@"http://localhost:3000"];
+        NSURL *URL = [NSURL URLWithString:@"http://askpebble.herokuapp.com"];
         sharedClient = [[self alloc] initWithBaseURL:URL];
         sharedClient.responseSerializer.acceptableContentTypes = [NSSet setWithArray:@[@"text/plain", @"application/json"]];
     });
