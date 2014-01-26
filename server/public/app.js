@@ -1,5 +1,5 @@
 var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/54321';
+var get_url = 'http://askpebble.herokuapp.com/questions/12345';
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
@@ -12,19 +12,22 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = JSON.parse(response);
-		callback(response);
+		questionBuffer = JSON.parse('[{"__v":0,"_id":"52e45453204ca402005a4029","created_on":"2014-01-26T00:18:27.096Z","question":"Favorite color?","answers":["54321"],"choices":[{"choice":"Red","_id":"52e45453204ca402005a402a","count":0},{"_id":"52e45453204ca402005a402b","choice":"Green","count":1}]}]');
+		if(callback) {
+			callback(response);
+		}
 	});
 }
 
-function nextQuestion(callback) {
-	if(questionBuffer.length === 0) {
-		//no questions
+function nextQuestion() {
+	clearFields();
+	data = questionBuffer.shift();
+	if(data) {
+		questionLoop();
+		getQuestions();
 	}
 	else {
-		data = questionBuffer.shift();
-		clearFields();
-		questionLoop();
+		simply.title('No questions');
 	}
 }
 
@@ -137,12 +140,12 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: '54321',
+			uuid: '12345',
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
-		simply.body('posted');
+		nextQuestion();
 	});
 }
 

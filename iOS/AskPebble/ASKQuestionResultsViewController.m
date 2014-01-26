@@ -7,22 +7,41 @@
 //
 
 #import "ASKQuestionResultsViewController.h"
+#import "ASKClient.h"
+#import "ASKQuestion.h"
 
 #define kSystemDefaultLeftAndRightPadding 20
 
 @interface ASKQuestionResultsViewController ()
 
 @property (nonatomic, weak) IBOutlet UILabel *questionLabel;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *doneButton;
+@property (nonatomic, strong) NSMutableArray *responseCountLabels;
 
-@property (nonatomic, strong) NSArray *answerChoices;
 @property (nonatomic, strong) NSArray *responseCounts;
 
 @property (nonatomic, strong) NSMutableArray *barWidthConstraints;
-@property (nonatomic, assign) BOOL barWidthConstraintsNeedUpdate;
+
+@property (nonatomic, strong) NSTimer *updateTimer;
+
+- (IBAction)doneButtonWasTapped;
 
 @end
 
 @implementation ASKQuestionResultsViewController
+
+- (NSArray *)responseCounts
+{
+    if (_responseCounts == nil) {
+        NSMutableArray *responseCounts = [NSMutableArray array];
+        for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
+            [responseCounts addObject:@0];
+        }
+        self.responseCounts = [responseCounts copy];
+    }
+    
+    return _responseCounts;
+}
 
 #pragma mark - View Life Cycle
 
@@ -30,13 +49,7 @@
 {
     [super viewDidLoad];
     
-    self.answerChoices = @[@"Pizza", @"Hotdog", @"Lasagna", @"Pasta"];
-    self.responseCounts = @[@15, @20, @30, @40];
-    
-    NSInteger highestResponseCount = 40;
-    CGFloat maxBarWidth = self.view.frame.size.width - (kSystemDefaultLeftAndRightPadding * 2);
-    CGFloat barHeight = 50;
-    
+    CGFloat barHeight = 30;
     UIView *previousBar = nil;
     
     NSArray *barColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor purpleColor]];
@@ -59,9 +72,9 @@
         responseCountLabel.textColor = [UIColor whiteColor];
         responseCountLabel.font = [UIFont boldSystemFontOfSize:17];
         [bar addSubview:responseCountLabel];
+        [self.responseCountLabels addObject:responseCountLabel];
         
-        CGFloat barWidth = maxBarWidth * ((float)responseCount / (float)highestResponseCount);
-        NSDictionary *metrics = @{@"barWidth": @(barWidth), @"barHeight": @(barHeight)};
+        NSDictionary *metrics = @{@"barHeight": @(barHeight)};
         
         NSMutableDictionary *views = [NSDictionaryOfVariableBindings(bar, _questionLabel, answerChoiceLabel, responseCountLabel) mutableCopy];
         if (previousBar != nil) {
@@ -75,7 +88,7 @@
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[answerChoiceLabel]" options:0 metrics:metrics views:views]];
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[bar]" options:0 metrics:metrics views:views]];
         
-        NSLayoutConstraint *barWidthConstraint = [[NSLayoutConstraint constraintsWithVisualFormat:@"[bar(barWidth)]" options:0 metrics:metrics views:views] firstObject];
+        NSLayoutConstraint *barWidthConstraint = [[NSLayoutConstraint constraintsWithVisualFormat:@"[bar(0)]" options:0 metrics:metrics views:views] firstObject];
         [self.view addConstraint:barWidthConstraint];
         [self.barWidthConstraints addObject:barWidthConstraint];
         
@@ -93,9 +106,58 @@
         
         previousBar = bar;
     }
+    
+    self.questionLabel.text = self.question;
 }
 
-#pragma mark - Updating Bar Widths
+#pragma mark - Setting ID
+
+- (void)setQuestionID:(NSString *)questionID
+{
+    _questionID = [questionID copy];
+    
+    [self.updateTimer invalidate];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(updateResponseCounts) userInfo:nil repeats:YES];
+}
+
+- (void)updateResponseCounts
+{
+    [[ASKClient sharedClient] getQuestionWithID:self.questionID completionHandler:^(ASKQuestion *question, NSError *error) {
+        if (question == nil) {
+            NSLog(@"Error getting question:%@", error);
+        }
+        
+        self.responseCounts = [question.answerChoices valueForKey:@"responseCount"];
+        [self updateBarGraphAnimated:YES];
+    }];
+}
+
+#pragma mark - Actions
+
+- (IBAction)doneButtonWasTapped
+{
+    [self.updateTimer invalidate];
+    
+    self.completionHandler();
+}
+
+
+#pragma mark - Updating UI
+
+- (void)updateBarGraphAnimated:(BOOL)animated
+{
+    [self updateResponseCountLabels];
+    [self updateBarWidthsAnimated:animated];
+}
+
+- (void)updateResponseCountLabels
+{
+    for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
+        UILabel *responseCountLabel = self.responseCountLabels[i];
+        
+        responseCountLabel.text = [NSString stringWithFormat:@"%i", [self.responseCounts[i] integerValue]];
+    }
+}
 
 - (void)updateBarWidthsAnimated:(BOOL)animated
 {
@@ -113,21 +175,20 @@
 
 - (void)updateBarWidthConstraints
 {
-    if (self.barWidthConstraintsNeedUpdate) {
-        NSInteger highestResponseCount = [[self.responseCounts valueForKeyPath:@"@max.self"] integerValue];
-        CGFloat maxBarWidth = self.view.frame.size.width - (kSystemDefaultLeftAndRightPadding * 2);
-        
-        for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
-            NSInteger responseCount = [self.responseCounts[i] integerValue];
-            CGFloat barWidth = maxBarWidth * ((float)responseCount / (float)highestResponseCount);
-            
-            NSLayoutConstraint *barWidthConstraint = self.barWidthConstraints[i];
-            
-            barWidthConstraint.constant = barWidth;
-        }
-    }
+    NSInteger highestResponseCount = [[self.responseCounts valueForKeyPath:@"@max.self"] integerValue];
+    CGFloat maxBarWidth = self.view.frame.size.width - (kSystemDefaultLeftAndRightPadding * 2);
     
-    self.barWidthConstraintsNeedUpdate = NO;
+    for (NSInteger i = 0; i < [self.answerChoices count]; i++) {
+        NSInteger responseCount = [self.responseCounts[i] integerValue];
+        CGFloat barWidth = maxBarWidth * ((float)responseCount / (float)highestResponseCount);
+        
+        if (highestResponseCount == 0) {
+            barWidth = 0;
+        }
+        
+        NSLayoutConstraint *barWidthConstraint = self.barWidthConstraints[i];
+        barWidthConstraint.constant = barWidth;
+    }
 }
 
 @end
