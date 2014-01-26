@@ -172,6 +172,8 @@
             label.textColor = [UIColor lightGrayColor];
             [label sizeToFit];
             textFieldCell.textField.rightView = label;
+            
+            textFieldCell.textField.returnKeyType = UIReturnKeyNext;
         }
         
         self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
@@ -259,6 +261,26 @@
     self.createQuestionButton.enabled = [self isValidQuestion];
     
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSArray *indexPaths = [[self.textFieldsByIndexPath allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    NSIndexPath *currentIndexPath = [self.tableView indexPathForCellWithSubview:textField];
+    
+    NSInteger currentIndex = [indexPaths indexOfObject:currentIndexPath];
+    
+    if (currentIndex < [indexPaths count] - 1) {
+        NSIndexPath *nextIndexPath = indexPaths[currentIndex + 1];
+        UITextField *nextTextField =self.textFieldsByIndexPath[nextIndexPath];
+        [nextTextField becomeFirstResponder];
+    }
+    else {
+        [textField resignFirstResponder];
+    }
+    
+    return NO;
 }
 
 @end
