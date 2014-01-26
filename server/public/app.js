@@ -7,6 +7,7 @@ var data, choices, selectedChoice;
 var choiceMap = ["A", "B", "C", "D", "E"];
 
 var noQuestions = false;
+var interval;
 
 getQuestions(function(response) {
 	nextQuestion();
@@ -105,7 +106,7 @@ function renderAnswers() {
 function updateChoices(c) {
 	choices = c;
 	choices.push({
-		_id: '0',
+		qid: '0',
 		choice: 'Skip'
 	});
 }
@@ -157,7 +158,7 @@ function postAnswer() {
 		url: post_url,
 		data: {
 			uuid: uuid,
-			qid: data._id,
+			qid: data.qid,
 			aid: choices[selectedChoice]._id,
 		}
 	}, function() {
@@ -173,15 +174,17 @@ function resultLoop() {
 function registerResultLoopEvents() {
 	clearListeners();
 	simply.on('singleClick', function(e) {
-		if(e.button === 'select')
+		if(e.button === 'select') {
+			clearInterval(interval)
 			nextQuestion();
+		}
 	});
 	simply.scrollable(true);
 }
 
 function renderResults() {
 	var results;	
-	setInterval(function() {
+	interval = setInterval(function() {
 		ajax({ url: 'http://askpebble.herokuapp.com/question/' + data._id }, function(response) {
 			var output = '';
 			results = ericsMethod(JSON.parse(response));
@@ -191,6 +194,7 @@ function renderResults() {
 					+ ' ' + result.votes + '\n    ' + result.choice
 					+ '\n';
 			}
+			simply.style('small');
 			simply.text({
 				body: output
 			}, true);
