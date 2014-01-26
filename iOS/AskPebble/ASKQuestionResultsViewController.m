@@ -49,7 +49,7 @@
 {
     [super viewDidLoad];
     
-    CGFloat barHeight = 30;
+    CGFloat barHeight = 50;
     UIView *previousBar = nil;
     
     NSArray *barColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor purpleColor]];
@@ -60,6 +60,10 @@
         UILabel *answerChoiceLabel = [[UILabel alloc] init];
         answerChoiceLabel.text = self.answerChoices[i];
         [self.view addSubview:answerChoiceLabel];
+        
+        UIView *backgroundBar = [[UIView alloc] init];
+        backgroundBar.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        [self.view addSubview:backgroundBar];
         
         UIView *bar = [[UIView alloc] init];
         bar.backgroundColor = barColors[i];
@@ -76,7 +80,7 @@
         
         NSDictionary *metrics = @{@"barHeight": @(barHeight)};
         
-        NSMutableDictionary *views = [NSDictionaryOfVariableBindings(bar, _questionLabel, answerChoiceLabel, responseCountLabel) mutableCopy];
+        NSMutableDictionary *views = [NSDictionaryOfVariableBindings(bar, _questionLabel, answerChoiceLabel, responseCountLabel, backgroundBar) mutableCopy];
         if (previousBar != nil) {
             [views addEntriesFromDictionary:NSDictionaryOfVariableBindings(previousBar)];
         }
@@ -84,9 +88,11 @@
         answerChoiceLabel.translatesAutoresizingMaskIntoConstraints = NO;
         bar.translatesAutoresizingMaskIntoConstraints = NO;
         responseCountLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        backgroundBar.translatesAutoresizingMaskIntoConstraints = NO;
         
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[answerChoiceLabel]" options:0 metrics:metrics views:views]];
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[bar]" options:0 metrics:metrics views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[backgroundBar(280)]" options:0 metrics:metrics views:views]];
         
         NSLayoutConstraint *barWidthConstraint = [[NSLayoutConstraint constraintsWithVisualFormat:@"[bar(0)]" options:0 metrics:metrics views:views] firstObject];
         [self.view addConstraint:barWidthConstraint];
@@ -100,6 +106,7 @@
         }
         
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[answerChoiceLabel]-5-[bar(barHeight)]" options:0 metrics:metrics views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[answerChoiceLabel]-5-[backgroundBar(barHeight)]" options:0 metrics:metrics views:views]];
         
         [bar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[responseCountLabel]-10-|" options:0 metrics:metrics views:views]];
         [bar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[responseCountLabel]|" options:0 metrics:metrics views:views]];
