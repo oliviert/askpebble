@@ -1,5 +1,5 @@
-var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/333';
+var uuid = Pebble.getAccountToken().toString();
+var get_url = 'http://askpebble.herokuapp.com/questions/' + uuid;
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
@@ -30,7 +30,7 @@ function nextQuestion() {
 	}
 	else {
 		if(noQuestions) {
-			simply.text({ title: 'No questions' }, true);
+			simply.text({ title: 'No more questions' }, true);
 		}
 		else {
 			noQuestions = true;
@@ -150,7 +150,7 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: '333',
+			uuid: uuid,
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
