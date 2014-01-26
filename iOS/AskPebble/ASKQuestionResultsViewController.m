@@ -52,7 +52,7 @@
     CGFloat barHeight = 50;
     UIView *previousBar = nil;
     
-    NSArray *barColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor purpleColor]];
+    NSArray *barColors = @[[UIColor colorWithRed:231.0f/255.0f green:76.0f/255.0f blue:60.0f/255.0f alpha:1.0], [UIColor colorWithRed:46.0f/255.0f green:204.0f/255.0f blue:113.0f/255.0f alpha:1.0], [UIColor colorWithRed:52.0f/255.0f green:152.0f/255.0f blue:219.0f/255.0f alpha:1.0], [UIColor colorWithRed:155.0f/255.0f green:89.0f/255.0f blue:182.0f/255.0f alpha:1.0]];
     
     self.barWidthConstraints = [NSMutableArray array];
     self.responseCountLabels = [NSMutableArray array];
@@ -136,6 +136,17 @@
         }
         
         self.responseCounts = [question.answerChoices valueForKey:@"responseCount"];
+        
+        /* To test bar graphs
+        NSMutableArray *responseCounts = [NSMutableArray array];
+        for (int i = 0; i < [self.answerChoices count]; i++) {
+            int randomInt = arc4random_uniform(50) + 1;
+            [responseCounts addObject:@(randomInt)];
+        }
+        
+        self.responseCounts = responseCounts;
+         */
+        
         [self updateBarGraphAnimated:YES];
     }];
 }
