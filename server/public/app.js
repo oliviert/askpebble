@@ -12,16 +12,16 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer.concat(JSON.parse(response));
+		questionBuffer = JSON.parse(response);
 		if(callback) {
 			callback(response);
 		}
 	});
 }
 
-function nextQuestion(callback) {
-	data = questionBuffer.shift();
+function nextQuestion() {
 	clearFields();
+	data = questionBuffer.shift();
 	if(data) {
 		questionLoop();
 		getQuestions();
