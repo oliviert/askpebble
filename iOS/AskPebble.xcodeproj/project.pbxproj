@@ -25,6 +25,8 @@
 		7A1345381893DAC50009A5F4 /* ASKQuestionResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1345371893DAC50009A5F4 /* ASKQuestionResultsViewController.m */; };
 		7A13453E1893F4A10009A5F4 /* UITableView+IndexPathFromView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A13453D1893F4A10009A5F4 /* UITableView+IndexPathFromView.m */; };
 		7A86FAE6189419F0000450DA /* ASKClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A86FAE5189419F0000450DA /* ASKClient.m */; };
+		7A86FB2418947673000450DA /* ASKQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A86FB2318947673000450DA /* ASKQuestion.m */; };
+		7A86FB2718947817000450DA /* ASKAnswerChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A86FB2618947817000450DA /* ASKAnswerChoice.m */; };
 		8F794C7C57554EACA6E4ACD4 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8B9AAB339742578F0CAF40 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +68,10 @@
 		7A13453D1893F4A10009A5F4 /* UITableView+IndexPathFromView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+IndexPathFromView.m"; sourceTree = "<group>"; };
 		7A86FAE4189419F0000450DA /* ASKClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKClient.h; sourceTree = "<group>"; };
 		7A86FAE5189419F0000450DA /* ASKClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKClient.m; sourceTree = "<group>"; };
+		7A86FB2218947673000450DA /* ASKQuestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKQuestion.h; sourceTree = "<group>"; };
+		7A86FB2318947673000450DA /* ASKQuestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKQuestion.m; sourceTree = "<group>"; };
+		7A86FB2518947817000450DA /* ASKAnswerChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASKAnswerChoice.h; sourceTree = "<group>"; };
+		7A86FB2618947817000450DA /* ASKAnswerChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASKAnswerChoice.m; sourceTree = "<group>"; };
 		BD8B9AAB339742578F0CAF40 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF9B50C52AFD4FB3B674E206 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,6 +147,10 @@
 				7A13453D1893F4A10009A5F4 /* UITableView+IndexPathFromView.m */,
 				7A1345331893CA0B0009A5F4 /* ASKTextFieldCell.h */,
 				7A1345341893CA0B0009A5F4 /* ASKTextFieldCell.m */,
+				7A86FB2218947673000450DA /* ASKQuestion.h */,
+				7A86FB2318947673000450DA /* ASKQuestion.m */,
+				7A86FB2518947817000450DA /* ASKAnswerChoice.h */,
+				7A86FB2618947817000450DA /* ASKAnswerChoice.m */,
 				7A86FAE4189419F0000450DA /* ASKClient.h */,
 				7A86FAE5189419F0000450DA /* ASKClient.m */,
 				7A1343E81893B8650009A5F4 /* Images.xcassets */,
@@ -311,12 +321,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A1343E71893B8650009A5F4 /* ASKAppDelegate.m in Sources */,
+				7A86FB2718947817000450DA /* ASKAnswerChoice.m in Sources */,
 				7A1345351893CA0B0009A5F4 /* ASKTextFieldCell.m in Sources */,
 				7A1345381893DAC50009A5F4 /* ASKQuestionResultsViewController.m in Sources */,
 				7A13453E1893F4A10009A5F4 /* UITableView+IndexPathFromView.m in Sources */,
 				7A86FAE6189419F0000450DA /* ASKClient.m in Sources */,
 				7A13447D1893BFB80009A5F4 /* ASKCreateQuestionViewController.m in Sources */,
 				7A1343E31893B8650009A5F4 /* main.m in Sources */,
+				7A86FB2418947673000450DA /* ASKQuestion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

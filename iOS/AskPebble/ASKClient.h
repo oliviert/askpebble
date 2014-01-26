@@ -8,10 +8,13 @@
 
 #import "AFHTTPSessionManager.h"
 
+@class ASKQuestion;
+
 @interface ASKClient : AFHTTPSessionManager
 
 + (instancetype)sharedClient;
 
-- (void)askQuestion:(NSString *)question withAnswerChoices:(NSArray *)answerChoices completionHandler:(void (^)(BOOL success, NSError *error))completionHandler;
+- (void)askQuestion:(NSString *)question withAnswerChoices:(NSArray *)answerChoices completionHandler:(void (^)(NSString *questionID, NSError *error))completionHandler;
+- (void)getQuestionWithID:(NSString *)questionID completionHandler:(void (^)(ASKQuestion *question, NSError *error))completionHandler;
 
 @end

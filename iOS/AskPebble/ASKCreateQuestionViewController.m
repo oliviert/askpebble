@@ -104,15 +104,6 @@
         }
     }
     
-    [[ASKClient sharedClient] askQuestion:self.question withAnswerChoices:answerChoices completionHandler:^(BOOL success, NSError *error) {
-        if (success) {
-            NSLog(@"Success!");
-        }
-        else {
-            NSLog(@"Error:%@", [error userInfo]);
-        }
-    }];
-    
     UINavigationController *resultsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ASKQuestionResultsNavigationController"];
     ASKQuestionResultsViewController *resultsViewController = [resultsNavigationController.viewControllers firstObject];
     
@@ -127,6 +118,14 @@
     };
     
     [self presentViewController:resultsNavigationController animated:YES completion:nil];
+    [[ASKClient sharedClient] askQuestion:self.question withAnswerChoices:answerChoices completionHandler:^(NSString *questionID, NSError *error) {
+        if ([questionID length] > 0) {
+            resultsViewController.questionID = questionID;
+        }
+        else {
+            NSLog(@"Error:%@", [error userInfo]);
+        }
+    }];
 }
 
 #pragma mark - UITableView
@@ -167,6 +166,12 @@
             
             textFieldCell.textField.delegate = self;
             textFieldCell.textField.clearButtonMode = UITextFieldViewModeAlways;
+            
+            UILabel *label = [[UILabel alloc] init];
+            label.text = @"0/9";
+            label.textColor = [UIColor lightGrayColor];
+            [label sizeToFit];
+            textFieldCell.textField.rightView = label;
         }
         
         self.textFieldsByIndexPath[indexPath] = textFieldCell.textField;
@@ -174,11 +179,13 @@
         if (indexPath.section == 0) {
             textFieldCell.textField.placeholder = NSLocalizedString(@"Enter a question...", @"");
             textFieldCell.textField.text = self.question;
+            textFieldCell.textField.rightViewMode = UITextFieldViewModeNever;
         }
         else {
             NSString *placeholderFormat = NSLocalizedString(@"answer choice %i", @"");
             textFieldCell.textField.placeholder = [NSString stringWithFormat:placeholderFormat, indexPath.row + 1];
             textFieldCell.textField.text = self.answerChoices[indexPath.row];
+            textFieldCell.textField.rightViewMode = UITextFieldViewModeWhileEditing;
         }
         
         if ([indexPath isEqual:self.activeIndexPath] && [textFieldCell.textField isFirstResponder] == NO) {
@@ -244,6 +251,9 @@
         }
         
         [self.answerChoices replaceObjectAtIndex:indexPath.row withObject:newString];
+        
+        UILabel *label = (UILabel *)textField.rightView;
+        label.text = [NSString stringWithFormat:@"%i/%i", [newString length], kAnswerChoiceMaxLength];
     }
     
     self.createQuestionButton.enabled = [self isValidQuestion];
