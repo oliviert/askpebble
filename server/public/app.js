@@ -1,6 +1,6 @@
 var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/12345';
-var post_url = 'http://askpebble.herokuapp.com/answer';
+var get_url = 'http://10.55.50.178:3000/questions/12345';
+var post_url = 'http://10.55.50.178:3000/answer';
 
 var questionBuffer = [];
 var data, choices, selectedChoice;
@@ -12,7 +12,8 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = JSON.parse('[{"__v":0,"_id":"52e45453204ca402005a4029","created_on":"2014-01-26T00:18:27.096Z","question":"Favorite color?","answers":["54321"],"choices":[{"choice":"Red","_id":"52e45453204ca402005a402a","count":0},{"_id":"52e45453204ca402005a402b","choice":"Green","count":1}]}]');
+		console.log(response);
+		questionBuffer = response;
 		if(callback) {
 			callback(response);
 		}
