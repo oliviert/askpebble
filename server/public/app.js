@@ -1,5 +1,5 @@
 var uuid = Pebble.getAccountToken();
-var get_url = 'http://askpebble.herokuapp.com/questions/54321';
+var get_url = 'http://askpebble.herokuapp.com/questions/12345';
 var post_url = 'http://askpebble.herokuapp.com/answer';
 
 var questionBuffer = [];
@@ -12,7 +12,7 @@ getQuestions(function(response) {
 
 function getQuestions(callback) {
 	ajax({ url: get_url }, function(response) {
-		questionBuffer = JSON.parse(response);
+		questionBuffer.concat(JSON.parse(response));
 		if(callback) {
 			callback(response);
 		}
@@ -140,7 +140,7 @@ function postAnswer() {
 		method: 'post',
 		url: post_url,
 		data: {
-			uuid: '54321',
+			uuid: '12345',
 			qid: data._id,
 			aid: choices[selectedChoice]._id,
 		}
